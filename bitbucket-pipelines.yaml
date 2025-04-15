@@ -1,0 +1,29 @@
+image: atlassian/default-image:latest
+
+pipelines:
+  default:
+    - step:
+        name: 🚀 Build & Push Docker Image (Commit)
+        services:
+          - docker
+        caches:
+          - docker
+        script:
+          - export SHORT_SHA=$(echo $BITBUCKET_COMMIT | cut -c1-7)
+          - docker build -t rg.fr-par.scw.cloud/demo-aot/fantome-app-backend:latest -t rg.fr-par.scw.cloud/demo-aot/fantome-app-backend:$SHORT_SHA .
+          - docker login -u "$DOCKER_USER" -p "$DOCKER_PASS" rg.fr-par.scw.cloud
+          - docker push rg.fr-par.scw.cloud/demo-aot/fantome-app-backend:latest
+          - docker push rg.fr-par.scw.cloud/demo-aot/fantome-app-backend:$SHORT_SHA
+
+  tags:
+    '**':
+      - step:
+          name: 🚀 Build & Push Docker Image (Git Tag)
+          services:
+            - docker
+          caches:
+            - docker
+          script:
+            - ocker build -t rg.fr-par.scw.cloud/demo-aot/fantome-app-backend:$BITBUCKET_TAG .
+            - docker login -u "$DOCKER_USER" -p "$DOCKER_PASS" rg.fr-par.scw.cloud
+            - docker push rg.fr-par.scw.cloud/demo-aot/fantome-app-backend:$BITBUCKET_TAG

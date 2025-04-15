@@ -1,0 +1,6 @@
+.editorconfig
+keycloak
+.gitignore
+docker-compose.yaml
+Jenkinsfile
+README.md

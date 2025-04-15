@@ -1,0 +1,114 @@
+# ===================================================================
+# Spring Boot configuration.
+#
+# This configuration will be overridden by the Spring profile you use,
+# for example application-dev.yml if you use the "dev" profile.
+#
+# ===================================================================
+
+# ===================================================================
+# Standard Spring Boot properties.
+# Full reference is available at:
+# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+# ===================================================================
+logging:
+  file:
+    path: /tmp/logs
+  level:
+    ROOT: INFO
+    com.aot.fantomeapp: INFO
+    sql: OFF
+#Metrics related configurations
+management:
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+  endpoint:
+    web.exposure.include: prometheus
+    metrics.enabled: true
+    prometheus.enabled: true
+    health:
+      probes:
+        enabled: true
+  endpoints.web.exposure.include: "*"
+  health:
+    livenessState:
+      enabled: true
+    readinessState:
+      enabled: true
+
+spring:
+  docker:
+    compose:
+      enabled: false
+  application:
+    name: 'fantome-app'
+  messages:
+    basename: i18n/messages
+  main:
+    allow-bean-definition-overriding: true
+  output:
+    ansi:
+      console-available: true
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: # VIA ENV
+          jwk-set-uri: # VIA ENV
+      client:
+        registration:
+          keycloak:
+            client-id: fantome-app
+            authorization-grant-type: authorization_code
+            scope: openid_email_profile
+        provider:
+          keycloak:
+            user-name-attribute: preferred_username
+
+
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    hibernate:
+      ddl-auto: none
+  flyway:
+    enabled: true
+    locations:
+      - classpath:/db/migration
+  datasource:
+    url: # VIA ENV
+    username: # VIA ENV
+    password: # VIA ENV
+  thymeleaf:
+    prefix: classpath:/templates/
+  mail:
+    host: # VIA ENV
+    port: 1025
+    properties.mail:
+      transport.protocol: smtp
+      smtp.auth: false
+      smtp.starttls.enable: false
+      smtp.starttls.required: false
+
+server:
+  servlet:
+    context-path: /api
+    session:
+      cookie:
+        http-only: true
+
+app:
+  version: "${project.version}"
+
+  sso:
+    issuer: "${spring.security.oauth2.resourceserver.jwt.issuer-uri}"
+    clientID: "${spring.security.oauth2.client.registration.keycloak.client-id}"
+
+  security:
+    unsecure:
+      path: /actuator/**,/actuator,/config

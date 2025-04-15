@@ -1,0 +1,25 @@
+logging:
+  level:
+    sql: INFO
+
+spring:
+  docker:
+    compose:
+      enabled: false
+      file: docker-compose.yaml
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9000/realms/fantome-app
+          jwk-set-uri: http://localhost:9000/realms/fantome-app/protocol/openid-connect/certs
+
+  datasource:
+    username: user
+    password: password
+    url: 'jdbc:postgresql://localhost:5442/fantome-app'
+  mail:
+    host: localhost
+    properties.mail:
+      smtp.debug: true
