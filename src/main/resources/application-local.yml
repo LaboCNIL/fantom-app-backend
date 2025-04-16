@@ -5,7 +5,7 @@ logging:
 spring:
   docker:
     compose:
-      enabled: false
+      enabled: true
       file: docker-compose.yaml
 
   security:

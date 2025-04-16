@@ -34,3 +34,6 @@ target
 node_modules
 .angular
 dist
+
+### Others ###
+application.pid

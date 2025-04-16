@@ -15,7 +15,7 @@ public class ArchitectureTest {
       .layer("Repositories").definedBy("com.aot.fantomeapp.repository..")
       .layer("Test").definedBy("com.aot.fantomeapp.test..")
       .whereLayer("Controllers").mayNotBeAccessedByAnyLayer()
-      .whereLayer("Services").mayOnlyBeAccessedByLayers("Controllers", "Tasks", "Services")
+      .whereLayer("Services").mayOnlyBeAccessedByLayers("Controllers", "Services")
       .whereLayer("Repositories").mayOnlyBeAccessedByLayers("Services", "Test")
       ;
 }
