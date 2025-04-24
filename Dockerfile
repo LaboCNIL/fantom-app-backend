@@ -1,17 +1,4 @@
-FROM maven:3.9-openjdk-21 AS build
-WORKDIR /app
-
-COPY pom.xml .
-RUN mvn dependency:go-offline
-
-COPY src ./src
-RUN mvn package
-
-FROM openjdk:21-jdk
-WORKDIR /app
-
-COPY --from=build /app/target/*.jar app.jar
-
+FROM bitnami/java:21
+COPY ./target/*.jar app.jar
+ENTRYPOINT ["java","-jar","./app.jar"]
 EXPOSE 8080
-
-CMD ["java", "-jar", "app.jar"]

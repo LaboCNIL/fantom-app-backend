@@ -1,65 +1,58 @@
 pipeline {
-//    agent { label "dev" }
+   agent any
+
+   tools {
+      jdk "jdk21"
+      maven "maven-pic"
+   }
 
    environment {
-      DOCKER_REGISTRY = "https://${env.MAIN_DOCKER_REGISTRY_HOST}/${env.SCW_REGISTRY_NS}"
+      MAIN_DOCKER_REGISTRY_HOST = "rg.fr-par.scw.cloud"
+      SCW_REGISTRY_NS = "demo-aot"
       IMAGE_REPOSITORY = "fantome-app-backend"
-      REGISTRY_CREDENTIALS = 'SCW_DOCKER_LOGIN'
+      DOCKER_REGISTRY = "${MAIN_DOCKER_REGISTRY_HOST}/${SCW_REGISTRY_NS}"
+      IMAGE_URL = "${DOCKER_REGISTRY}/${IMAGE_REPOSITORY}"
    }
 
    stages {
       stage('Clone') {
          steps {
             checkout scm
-            stash name: 'scm', includes: '*'
          }
       }
 
-      stage('Test application') {
+      stage('Build & Test') {
          steps {
-            unstash 'scm'
             script {
-               def timezone = '-e TZ=Europe/Paris'
-               docker.image('maven:3.9.6-eclipse-temurin-17').inside("${timezone}") {
-                  sh 'mvn -version ; mvn test'
-               }
+               sh "mvn clean package"
             }
          }
       }
 
-      stage('Build application') {
+      stage('Quality') {
          steps {
-            unstash 'scm'
-            script {
-               def timezone = '-e TZ=Europe/Paris'
-               docker.image('maven:3.9.6-eclipse-temurin-17').inside("${timezone}") {
-                  sh 'mvn -DskipTests -Pprod package'
-               }
+            withSonarQubeEnv('sonarqube AOT') {
+               sh "mvn sonar:sonar"
             }
          }
       }
 
-      def image
-
-      stage('Build image API') {
+      stage('Build Docker Image') {
          steps {
             script {
-               def branchName = "develop"
-               //def sanitizedBranch = branchName.replaceAll("/", "-")
-               docker.withRegistry(DOCKER_REGISTRY, REGISTRY_CREDENTIALS) {
-                  image = docker.build("${IMAGE_REPOSITORY}:${branchName}", ".")
-               }
+               def branch = env.BRANCH_NAME ? : 'latest'
+               sh "docker build . -t ${IMAGE_URL}:${branch}"
             }
          }
       }
 
-      stage('Push image API') {
+      stage('Push Docker Image') {
          steps {
-            script {
-               def branchName = "develop"
-               //def sanitizedBranch = branchName.replaceAll('/', '-')
-               docker.withRegistry(DOCKER_REGISTRY, REGISTRY_CREDENTIALS) {
-                  image.push("${branchName}")
+            withCredentials([string(credentialsId: 'SCW_PIC_AOT_SK', variable: 'PASSWORD')]) {
+               script {
+                  def branch = env.BRANCH_NAME ? : 'latest'
+                  sh "docker login ${DOCKER_REGISTRY} -u nologin -p $PASSWORD"
+                  sh "docker push ${IMAGE_URL}:${branch}"
                }
             }
          }
