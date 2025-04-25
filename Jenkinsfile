@@ -40,7 +40,7 @@ pipeline {
       stage('Build Docker Image') {
          steps {
             script {
-               def branch = env.BRANCH_NAME ? : 'latest'
+               def branch = env.BRANCH_NAME ?: 'latest'
                sh "docker build . -t ${IMAGE_URL}:${branch}"
             }
          }
@@ -50,12 +50,18 @@ pipeline {
          steps {
             withCredentials([string(credentialsId: 'SCW_PIC_AOT_SK', variable: 'PASSWORD')]) {
                script {
-                  def branch = env.BRANCH_NAME ? : 'latest'
+                  def branch = env.BRANCH_NAME ?: 'latest'
                   sh "docker login ${DOCKER_REGISTRY} -u nologin -p $PASSWORD"
                   sh "docker push ${IMAGE_URL}:${branch}"
                }
             }
          }
+      }
+   }
+   
+   post {
+      always {
+         cleanWs()
       }
    }
 }
