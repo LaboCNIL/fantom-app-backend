@@ -1,49 +1,34 @@
 services:
-
-   # KEYCLOAK
-   keycloak:
-      container_name: fantome-app-keycloak
-      image: quay.io/keycloak/keycloak:24.0.4
-      command:
-         - start-dev
-         - --import-realm
-      environment:
-         - KEYCLOAK_ADMIN=admin
-         - KEYCLOAK_ADMIN_PASSWORD=password
-         - ST_BASE_URL=http://localhost:4200
-      ports:
-         - "9000:8080"
-      volumes:
-         - ./keycloak/realm/:/opt/keycloak/data/import/
-         - ./keycloak/themes/:/opt/keycloak/themes
-
-   # POSTGRESQL
-   postgres:
-      container_name: fantome-app-postgres
-      image: postgres:17-alpine
-      environment:
-         - POSTGRES_DB=fantome-app
-         - POSTGRES_USER=user
-         - POSTGRES_PASSWORD=password
-      ports:
-         - "5442:5432"
-      volumes:
-        - postgres-data:/var/lib/postgresql/data
   
+  # KEYCLOAK
+  keycloak:
+    container_name: fantome-app-keycloak
+    image: quay.io/keycloak/keycloak:24.0.4
+    command:
+      - start-dev
+      - --import-realm
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=password
+      - ST_BASE_URL=http://localhost:4200
+    ports:
+      - "9000:8080"
+    volumes:
+      - ./keycloak/realm/:/opt/keycloak/data/import/
+      - ./keycloak/themes/:/opt/keycloak/themes
   
-   # mailHog
-   mailpit:
-      container_name: fantome-app-mailpit
-      image: axllent/mailpit:v1.19
-      environment:
-         TZ: Europe/Paris
-         MP_DATA_FILE: /data/mailpit.db
-      ports:
-         - "1025:1025"  # SMTP port
-         - "8025:8025"  # Web UI port
-      volumes:
-         - smtp-data:/data
+  # POSTGRESQL
+  postgres:
+    container_name: fantome-app-postgres
+    image: postgres:17-alpine
+    environment:
+      - POSTGRES_DB=fantome-app
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+    ports:
+      - "5442:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
 
 volumes:
-   postgres-data:
-   smtp-data:
+  postgres-data:

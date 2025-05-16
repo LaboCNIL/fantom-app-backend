@@ -19,7 +19,3 @@ spring:
     username: user
     password: password
     url: 'jdbc:postgresql://localhost:5442/fantome-app'
-  mail:
-    host: localhost
-    properties.mail:
-      smtp.debug: true

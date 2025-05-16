@@ -86,14 +86,6 @@ spring:
     password: # VIA ENV
   thymeleaf:
     prefix: classpath:/templates/
-  mail:
-    host: # VIA ENV
-    port: 1025
-    properties.mail:
-      transport.protocol: smtp
-      smtp.auth: false
-      smtp.starttls.enable: false
-      smtp.starttls.required: false
 
 server:
   servlet:
