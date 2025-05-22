@@ -56,8 +56,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: # VIA ENV
-          jwk-set-uri: # VIA ENV
+          issuer-uri: ${SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI}
+          jwk-set-uri: ${SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI}
       client:
         registration:
           keycloak:
@@ -67,7 +67,6 @@ spring:
         provider:
           keycloak:
             user-name-attribute: preferred_username
-
 
   jpa:
     show-sql: true
@@ -81,9 +80,9 @@ spring:
     locations:
       - classpath:/db/migration
   datasource:
-    url: # VIA ENV
-    username: # VIA ENV
-    password: # VIA ENV
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
   thymeleaf:
     prefix: classpath:/templates/
 
