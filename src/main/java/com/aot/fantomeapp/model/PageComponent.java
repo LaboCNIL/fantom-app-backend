@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Table(name = "page_component")
 @Getter
@@ -21,9 +23,6 @@ public class PageComponent extends BaseEntity {
    private String type;
 
    @Column
-   private Integer position;
-
-   @Column
    private String image;
 
    @OneToOne
@@ -31,10 +30,9 @@ public class PageComponent extends BaseEntity {
    private Section section;
 
    @OneToOne
-   @JoinColumn(name = "previous_page_component_id")
-   private PageComponent previous;
-
-   @OneToOne
    @JoinColumn(name = "next_page_component_id")
    private PageComponent next;
+   
+   @OneToMany(mappedBy = "pageComponent")
+   private List<PageComponentTranslation> translations;
 }

@@ -4,19 +4,19 @@ import lombok.Getter;
 
 @Getter
 public enum Language {
-   CATALAN("CA"),
-   DANISH("DA"),
-   GREEK("EL"),
-   ENGLISH("EN"),
-   SPANISH("ES"),
-   FRENCH("FR"),
-   HUNGARIAN("HU"),
-   POLISH("PL"),
-   PORTUGUESE("PT");
+   CA("CATALAN"),
+   DA("DANISH"),
+   EL("GREEK"),
+   EN("ENGLISH"),
+   ES("SPANISH"),
+   FR("FRENCH"),
+   HU("HUNGARIAN"),
+   PL("POLISH"),
+   PT("PORTUGUESE");
    
-   private final String code;
+   private final String value;
    
    Language(String code) {
-      this.code = code;
+      this.value = code;
    }
 }

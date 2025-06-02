@@ -102,4 +102,4 @@ app:
 
   security:
     unsecure:
-      path: /actuator/**,/actuator,/config
+      path: /actuator/**,/actuator,/config,/public/**

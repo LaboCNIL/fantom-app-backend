@@ -9,3 +9,6 @@ spring:
       file: docker-compose.yaml
   config:
     import: file:.env[.properties]
+  devtools:
+    livereload:
+      enabled: false
