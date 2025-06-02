@@ -95,11 +95,13 @@ server:
 
 app:
   version: "${project.version}"
-
+  
   sso:
     issuer: "${spring.security.oauth2.resourceserver.jwt.issuer-uri}"
     clientID: "${spring.security.oauth2.client.registration.keycloak.client-id}"
 
   security:
     unsecure:
-      path: /actuator/**,/actuator,/config,/public/**
+      paths: /actuator/**,/actuator,/config,/public/**
+    cors: 
+      allowed-origins: http://localhost:4200,http://localhost:4300,https://sandbox.fantome-app.aot.agency,https://sandbox.bo-fantome-app.aot.agency
