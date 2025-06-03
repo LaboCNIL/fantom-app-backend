@@ -40,8 +40,8 @@ pipeline {
       stage('Build Docker Image') {
          steps {
             script {
-               def branch = env.BRANCH_NAME ?: 'latest'
-               sh "docker build . -t ${IMAGE_URL}:${branch}"
+               def tag = env.BRANCH_NAME ?: 'latest'
+               sh "docker build . -t ${IMAGE_URL}:${tag}"
             }
          }
       }
@@ -50,10 +50,24 @@ pipeline {
          steps {
             withCredentials([string(credentialsId: 'SCW_PIC_AOT_SK', variable: 'PASSWORD')]) {
                script {
-                  def branch = env.BRANCH_NAME ?: 'latest'
+                  def tag = env.BRANCH_NAME ?: 'latest'
                   sh "docker login ${DOCKER_REGISTRY} -u nologin -p $PASSWORD"
-                  sh "docker push ${IMAGE_URL}:${branch}"
+                  sh "docker push ${IMAGE_URL}:${tag}"
                }
+            }
+         }
+      }
+      
+      stage('Deploy Application') {
+         steps {
+            script {
+               echo "🚀 Déploiement en cours..."
+               def tag = env.BRANCH_NAME ?: 'latest'
+               def deployEnv = env.DEPLOYMENT_ENVIRONMENT ?: 'sandbox'
+               build job: 'fantome-app-deploy', parameters: [
+                  string(name: 'TAG', value: tag),
+                  string(name: 'DEPLOYMENT_ENVIRONMENT', value: deployEnv)
+               ]
             }
          }
       }
