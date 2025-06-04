@@ -14,10 +14,15 @@
 logging:
   file:
     path: /tmp/logs
+    maxFileSize: 10MB
+    maxHistory: 60
+    totalSizeCap: 20GB
+    logPattern: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36}.%M\\(%line\\) - %msg%n"
   level:
-    ROOT: INFO
-    com.aot.fantomeapp: INFO
-    sql: OFF
+    root: WARN
+    com.aot.fantomeapp: WARN
+    sql: WARN
+    sql_params: WARN
 #Metrics related configurations
 management:
   prometheus:
@@ -69,7 +74,7 @@ spring:
             user-name-attribute: preferred_username
 
   jpa:
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         format_sql: true

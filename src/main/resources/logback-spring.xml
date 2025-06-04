@@ -4,32 +4,43 @@
 <configuration scan="true">
 
    <springProperty name="logging_file_path" source="logging.file.path"/>
-   <springProperty name="logging_level_root" source="logging.level.ROOT"/>
+   <springProperty name="logging_level_root" source="logging.level.root"/>
+   <springProperty name="logging_level_app" source="logging.level.com.aot.fantomeapp"/>
    <springProperty name="logging_level_sql" source="logging.level.sql" />
-   
+   <springProperty name="logging_level_sql_params" source="logging.level.sql_params" />
+   <springProperty name="maxFileSize" source="logging.file.maxFileSize" />
+   <springProperty name="maxHistory" source="logging.file.maxHistory" />
+   <springProperty name="totalSizeCap" source="logging.file.totalSizeCap" />
+   <springProperty name="logPattern" source="logging.file.logPattern" />
+
    <property name="ROOT_LEVEL" value="${logging_level_root}"/>
    <property name="LOG_FILE" value="${logging_file_path}"/>
 
    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
-   <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
       <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
          <fileNamePattern>${LOG_FILE}/fantome-app.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
-         <!-- each archived file, size max 10MB -->
-         <maxFileSize>10MB</maxFileSize>
-         <!-- total size of all archive files, if total size > 20GB, it will delete old archived file -->
-         <totalSizeCap>20GB</totalSizeCap>
-         <!-- 60 days to keep -->
-         <maxHistory>60</maxHistory>
+         <!-- each archived file, size max X -->
+         <maxFileSize>${maxFileSize}</maxFileSize>
+         <!-- total size of all archive files, if total size > X, it will delete old archived file -->
+         <maxHistory>${maxHistory}</maxHistory>
+         <!-- X days to keep -->
+         <totalSizeCap>${totalSizeCap}</totalSizeCap>
       </rollingPolicy>
 
       <encoder>
-         <pattern>${FILE_LOG_PATTERN}</pattern>
+         <pattern>${logPattern}</pattern>
       </encoder>
    </appender>
 
+   <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+      <encoder>
+         <!--charset>UTF-8</charset-->
+         <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+      </encoder>
+   </appender>
    <root level="${ROOT_LEVEL}">
-      <appender-ref ref="CONSOLE"/>
+      <appender-ref ref="console"/>
    </root>
 
    <!-- Par défaut, on ne log pas dans un fichier, ce comportement est modifiable grâce au profil spring `file-logging` -->
@@ -39,27 +50,10 @@
       </root>
    </springProfile>
    
-   <logger name="sun.rmi" level="WARN"/>
-   <logger name="com.zaxxer" level="WARN"/>
-   <logger name="org.apache" level="WARN"/>
-   <logger name="javax.activation" level="WARN"/>
-   <logger name="javax.mail" level="WARN"/>
-   <logger name="javax.management.remote" level="WARN"/>
-   <logger name="javax.xml.bind" level="WARN"/>
-   <logger name="ch.qos.logback" level="WARN"/>
-
-   <logger name="org.ehcache" level="INFO"/>
-   <logger name="org.hibernate.validator" level="WARN"/>
-   <logger name="org.hibernate" level="INFO"/>
+   <logger name="fr.mi.optimate" level="${logging_level_app}" />
    <logger name="org.hibernate.SQL" level="${logging_level_sql}" />
    <!-- à partir de springboot v3 -->
-   <logger name="org.hibernate.orm.jdbc.bind" level="${logging_level_sql}" />
-
-   <logger name="org.postgresql" level="WARN"/>
-   <logger name="org.springframework" level="INFO"/>
-   <logger name="org.springframework.web" level="${ROOT_LEVEL}"/>
-   <logger name="org.springframework.security" level="${ROOT_LEVEL}"/>
-   <logger name="org.springframework.cache" level="INFO"/>
+   <logger name="org.hibernate.orm.jdbc.bind" level="${logging_level_sql_params}" />
 
    <!-- https://logback.qos.ch/manual/configuration.html#shutdownHook and https://jira.qos.ch/browse/LOGBACK-1090 -->
    <shutdownHook class="ch.qos.logback.core.hook.DefaultShutdownHook"/>

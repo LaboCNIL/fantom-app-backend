@@ -1,6 +1,9 @@
 logging:
   level:
-    sql: INFO
+    root: INFO
+    com.aot.fantomeapp: DEBUG
+    sql: DEBUG
+    sql_params: TRACE
 
 spring:
   docker:
@@ -8,7 +11,7 @@ spring:
       enabled: false
       file: docker-compose.yaml
   config:
-    import: file:.env[.properties]
+    import: optional:file:.env[.properties]
   devtools:
     livereload:
       enabled: false

@@ -18,6 +18,7 @@ public class UserController {
 
    @GetMapping("/me")
    public ResponseEntity<UserDto> getMe(ConnectedUser connectedUser) {
+      log.debug("getMe");
       return ResponseEntity.ok(UserMapper.connectedUserToDto(connectedUser));
    }
 }

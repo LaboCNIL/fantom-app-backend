@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class LoggerInitializer {
 
-   @Value("${logging.level.ROOT}")
+   @Value("${logging.level.root}")
    private String rootLogLevel;
 
    @PostConstruct

@@ -18,6 +18,7 @@ public class ConfigController {
 
    @GetMapping("/config")
    public ResponseEntity<AppConfigDto> getConfig() {
+      log.debug("getConfig");
       return ResponseEntity.ok(AppConfigMapper.appPropertiesToDto(appProperties));
    }
 }
