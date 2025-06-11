@@ -109,4 +109,4 @@ app:
     unsecure:
       paths: /actuator/**,/actuator,/config,/public/**
     cors: 
-      allowed-origins: http://localhost:4200,http://localhost:4300,https://sandbox.fantome-app.aot.agency,https://sandbox.bo-fantome-app.aot.agency
+      allowed-origins: #via ENV
