@@ -74,7 +74,19 @@ pipeline {
    }
    
    post {
-      always {
+      regression {
+         office365ConnectorSend(
+            message:"Erreur lors du build de Fantom-App-Backend",
+            webhookUrl:"https://actongroupe.webhook.office.com/webhookb2/d44322f9-b245-4929-b720-f8a573d5f65b@f2e2825c-f8d0-44fd-ae55-81c226791777/JenkinsCI/422034bbcb634ebca3cf0478f9a14a92/f1435656-c6b6-40ff-8fa2-91db51a97567/V2pJ_tgc0JSNdMBdB21SKV_rSErsqMc17TmJ72VzusXs01"
+         )
+      }
+      fixed {
+         office365ConnectorSend(
+            message:"Build de Fantom-App-Backend réparré",
+            webhookUrl:"https://actongroupe.webhook.office.com/webhookb2/d44322f9-b245-4929-b720-f8a573d5f65b@f2e2825c-f8d0-44fd-ae55-81c226791777/JenkinsCI/422034bbcb634ebca3cf0478f9a14a92/f1435656-c6b6-40ff-8fa2-91db51a97567/V2pJ_tgc0JSNdMBdB21SKV_rSErsqMc17TmJ72VzusXs01"
+         )
+      }
+      cleanup {
          cleanWs()
       }
    }
