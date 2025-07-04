@@ -1,4 +1,6 @@
 package com.aot.fantomeapp.dto;
 
-public record PageComponentCreateDto (String code, String type, String image) {
+import com.aot.fantomeapp.model.enums.ComponentType;
+
+public record PageComponentCreateDto (String code, ComponentType type, Long parentId) {
 }

@@ -26,6 +26,7 @@ public class PageComponentTranslationService {
       pageComponentTranslationToSave.setFirstTitle(dto.firstTitle());
       pageComponentTranslationToSave.setSecondTitle(dto.secondTitle());
       pageComponentTranslationToSave.setShortDescription(dto.shortDescription());
+      pageComponentTranslationToSave.setImage(dto.image());
       pageComponentTranslationToSave.setCreatedAt(Instant.now());
       pageComponentTranslationRepository.save(pageComponentTranslationToSave);
    }

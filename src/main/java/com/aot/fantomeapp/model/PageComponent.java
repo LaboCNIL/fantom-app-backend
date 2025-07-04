@@ -1,5 +1,7 @@
 package com.aot.fantomeapp.model;
 
+import com.aot.fantomeapp.model.enums.ComponentStatus;
+import com.aot.fantomeapp.model.enums.ComponentType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,15 +22,27 @@ public class PageComponent extends BaseEntity {
    private String code;
 
    @Column
-   private String type;
+   @Enumerated(EnumType.STRING)
+   private ComponentType type;
 
    @Column
-   private String image;
+   @Enumerated(EnumType.STRING)
+   private ComponentStatus status;
 
+   @Column
+   private Integer position;
+   
    @OneToOne
    @JoinColumn(name = "section_id")
    private Section section;
 
+   @ManyToOne
+   @JoinColumn(name = "parent_page_component_id")
+   private PageComponent parent;
+
+   @OneToMany(mappedBy = "parent")
+   private List<PageComponent> children;
+   
    @OneToOne
    @JoinColumn(name = "next_page_component_id")
    private PageComponent next;

@@ -37,7 +37,9 @@ public class PageComponentTranslation extends BaseEntity {
    @Enumerated(EnumType.STRING)
    private Device device;
 
-   @JsonIgnore
+   @Column
+   private String image;
+   
    @ManyToOne
    @JoinColumn(name = "page_component_id")
    private PageComponent pageComponent;
