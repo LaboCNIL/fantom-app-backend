@@ -6,6 +6,7 @@ import com.aot.fantomeapp.mapper.PageComponentMapper;
 import com.aot.fantomeapp.model.PageComponent;
 import com.aot.fantomeapp.model.Section;
 import com.aot.fantomeapp.model.enums.ComponentStatus;
+import com.aot.fantomeapp.model.enums.ComponentType;
 import com.aot.fantomeapp.repository.PageComponentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,14 +22,28 @@ public class PageComponentService {
 
    private final PageComponentRepository pageComponentRepository;
    private final PageComponentMapper pageComponentMapper;
+   protected final SectionService sectionService;
 
-   public void create(Long sectionId, PageComponentCreateDto pageComponentCreateDto) {
+   public void create(Long sectionId, PageComponentCreateDto dto) {
       PageComponent pageComponentToSave = new PageComponent();
-      Section section = new Section();
-      section.setId(sectionId);
-      pageComponentToSave.setSection(section);
-      pageComponentToSave.setCode(pageComponentCreateDto.code());
-      pageComponentToSave.setType(pageComponentCreateDto.type());
+      
+      Optional<Section> sectionOpt = sectionService.findById(sectionId);
+      if (sectionOpt.isEmpty()) {
+         throw new RuntimeException("Section not found");
+      }
+      pageComponentToSave.setSection(sectionOpt.get());
+      
+      if (!(dto.type().equals(ComponentType.PAGE_1) || dto.type().equals(ComponentType.PAGE_2))) {
+         Optional<PageComponent> parentOpt = findById(dto.parentId());
+         if (parentOpt.isEmpty()) {
+            throw new RuntimeException("Parent component not found");
+         }
+         pageComponentToSave.setParent(parentOpt.get());
+      }
+      
+      pageComponentToSave.setCode(dto.code());
+      pageComponentToSave.setType(dto.type());
+      pageComponentToSave.setPosition(dto.position());
       pageComponentToSave.setStatus(ComponentStatus.DRAFT);
       pageComponentToSave.setCreatedAt(Instant.now());
       pageComponentRepository.save(pageComponentToSave);
@@ -52,18 +67,8 @@ public class PageComponentService {
       return pageComponentRepository.findById(id);
    }
 
-   public void updateParentPageComponent(Long currentPageComponentId, Long parentPageComponentId) {
-      findById(currentPageComponentId).ifPresent(currentPageComponent -> {
-         findById(parentPageComponentId).ifPresent(parentPageComponent -> {
-            currentPageComponent.setParent(parentPageComponent);
-            currentPageComponent.setUpdatedAt(Instant.now());
-         });
-         pageComponentRepository.save(currentPageComponent);
-      });
-   }
-
    public PageComponentDto findRootBySectionId(Long sectionId) {
-      List<PageComponent> pageComponents = pageComponentRepository.findAllBySectionIdAndStatus(sectionId, ComponentStatus.PUBLISHED);
+      List<PageComponent> pageComponents = pageComponentRepository.findAllBySectionIdAndStatusAndType(sectionId, ComponentStatus.PUBLISHED, ComponentType.PAGE_1);
       List<Long> nextComponentIds = pageComponents.stream().map(PageComponent::getNext).filter(Objects::nonNull).map(PageComponent::getId).toList();
       Optional<PageComponent> rootComponentOpt = pageComponents.stream().filter(pageComponent -> pageComponent.getParent() == null &&
          !nextComponentIds.contains(pageComponent.getId())).findFirst();

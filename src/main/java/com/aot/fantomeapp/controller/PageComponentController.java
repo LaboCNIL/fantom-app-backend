@@ -2,12 +2,9 @@ package com.aot.fantomeapp.controller;
 
 import com.aot.fantomeapp.dto.PageComponentCreateDto;
 import com.aot.fantomeapp.dto.PageComponentDto;
-import com.aot.fantomeapp.model.PageComponent;
 import com.aot.fantomeapp.service.PageComponentService;
-import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,20 +26,14 @@ public class PageComponentController {
    }
    
    @PostMapping("{sectionId}")
-   public void createPageComponent(@PathVariable("sectionId") Long sectionId, @RequestBody PageComponentCreateDto pageComponentCreateDto) {
+   public void createPageComponent(@PathVariable("sectionId") Long sectionId, @RequestBody PageComponentCreateDto dto) {
       log.debug("createPageComponent");
-      pageComponentService.create(sectionId, pageComponentCreateDto);
+      pageComponentService.create(sectionId, dto);
    }
    
    @PutMapping("{currentPageComponentId}/next")
    public void nextPageComponent(@PathVariable("currentPageComponentId") Long currentPageComponentId, @RequestBody Long nextPageComponentId) {
       log.debug("nextPageComponent");
       pageComponentService.affectNextPageComponent(currentPageComponentId, nextPageComponentId);
-   }
-   
-   @PutMapping("{currentPageComponentId}/parent")
-   public void updateParentPageComponent(@PathVariable("currentPageComponentId") Long currentPageComponentId, @RequestBody Long parentPageComponentId) {
-      log.debug("updateParentPageComponent");
-      pageComponentService.updateParentPageComponent(currentPageComponentId, parentPageComponentId);
    }
 }

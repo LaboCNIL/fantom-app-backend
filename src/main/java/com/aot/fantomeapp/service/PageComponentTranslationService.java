@@ -14,7 +14,6 @@ import java.time.Instant;
 public class PageComponentTranslationService {
    
    private final PageComponentTranslationRepository pageComponentTranslationRepository;
-   private final PageComponentService pageComponentService;
    
    public void create(Long pageComponentId, PageComponentTranslationCreateDto dto) {
       PageComponentTranslation pageComponentTranslationToSave = new PageComponentTranslation();
@@ -25,7 +24,7 @@ public class PageComponentTranslationService {
       pageComponentTranslationToSave.setDevice(dto.device());
       pageComponentTranslationToSave.setFirstTitle(dto.firstTitle());
       pageComponentTranslationToSave.setSecondTitle(dto.secondTitle());
-      pageComponentTranslationToSave.setShortDescription(dto.shortDescription());
+      pageComponentTranslationToSave.setDescription(dto.description());
       pageComponentTranslationToSave.setImage(dto.image());
       pageComponentTranslationToSave.setCreatedAt(Instant.now());
       pageComponentTranslationRepository.save(pageComponentTranslationToSave);

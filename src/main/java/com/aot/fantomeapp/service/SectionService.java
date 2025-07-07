@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -15,5 +16,9 @@ public class SectionService {
    
    public List<Section> findAll() {
       return sectionRepository.findAll();
+   }
+   
+   public Optional<Section> findById(Long id) {
+      return sectionRepository.findById(id);
    }
 }

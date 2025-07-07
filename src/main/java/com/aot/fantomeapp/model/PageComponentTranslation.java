@@ -2,7 +2,6 @@ package com.aot.fantomeapp.model;
 
 import com.aot.fantomeapp.model.enums.Device;
 import com.aot.fantomeapp.model.enums.Language;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,10 +23,7 @@ public class PageComponentTranslation extends BaseEntity {
    private String secondTitle;
 
    @Column
-   private String shortDescription;
-
-   @Column
-   private String longDescription;
+   private String description;
 
    @Column
    @Enumerated(EnumType.STRING)
