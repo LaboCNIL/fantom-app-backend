@@ -68,7 +68,16 @@ public class PageComponentService {
    }
 
    public PageComponentDto findRootBySectionId(Long sectionId) {
-      List<PageComponent> pageComponents = pageComponentRepository.findAllBySectionIdAndStatusAndType(sectionId, ComponentStatus.PUBLISHED, ComponentType.PAGE_1);
+      Optional<Section> sectionOpt = sectionService.findById(sectionId);
+      if (sectionOpt.isEmpty()) {
+         throw new RuntimeException("Section not found");
+      }
+      
+      ComponentType typeBySection = ComponentType.PAGE_1;
+      if (sectionOpt.get().getCode().equals("secure-myself")) {
+         typeBySection = ComponentType.PAGE_3;
+      }
+      List<PageComponent> pageComponents = pageComponentRepository.findAllBySectionIdAndStatusAndType(sectionId, ComponentStatus.PUBLISHED, typeBySection);
       List<Long> nextComponentIds = pageComponents.stream().map(PageComponent::getNext).filter(Objects::nonNull).map(PageComponent::getId).toList();
       Optional<PageComponent> rootComponentOpt = pageComponents.stream().filter(pageComponent -> pageComponent.getParent() == null &&
          !nextComponentIds.contains(pageComponent.getId())).findFirst();

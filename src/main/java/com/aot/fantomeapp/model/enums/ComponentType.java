@@ -6,6 +6,7 @@ import lombok.Getter;
 public enum ComponentType {
    PAGE_1,
    PAGE_2,
+   PAGE_3,
    CARD_1,
    CARD_2,
    CARD_3,
