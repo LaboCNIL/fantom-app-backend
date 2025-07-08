@@ -12,6 +12,8 @@ public enum ComponentType {
    CARD_4,
    CARD_5,
    CARD_6,
+   CARD_7,
+   CARD_8,
    TILE_CALL,
    TILE_MESSAGE,
    ENRICHED_LINK,
