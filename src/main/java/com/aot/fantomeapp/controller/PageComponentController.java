@@ -36,4 +36,10 @@ public class PageComponentController {
       log.debug("nextPageComponent");
       pageComponentService.affectNextPageComponent(currentPageComponentId, nextPageComponentId);
    }
+   
+   @DeleteMapping("{pageComponentId}")
+   public void deletePageComponent(@PathVariable("pageComponentId") Long pageComponentId) {
+      log.debug("deletePageComponent");
+      pageComponentService.delete(pageComponentId);
+   }
 }

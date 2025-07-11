@@ -85,4 +85,10 @@ public class PageComponentService {
 
       return rootComponentOpt.map(pageComponentMapper::toDto).orElse(null);
    }
+
+   public void delete(Long pageComponentId) {
+      findById(pageComponentId).ifPresentOrElse(pageComponentRepository::delete, ()-> {
+         throw new RuntimeException("Page component not found");
+      });
+   }
 }
