@@ -1,5 +1,6 @@
 package com.aot.fantomeapp.model;
 
+import com.aot.fantomeapp.mapper.DeviceListConverter;
 import com.aot.fantomeapp.model.enums.Device;
 import com.aot.fantomeapp.model.enums.CountryRegion;
 import jakarta.persistence.*;
@@ -7,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Table(name = "page_component_translation")
@@ -29,9 +32,9 @@ public class PageComponentTranslation extends BaseEntity {
    @Enumerated(EnumType.STRING)
    private CountryRegion countryRegion;
 
-   @Column
-   @Enumerated(EnumType.STRING)
-   private Device device;
+   @Convert(converter = DeviceListConverter.class)
+   @Column(name = "device")
+   private List<Device> devices;
 
    @Column
    private String image;

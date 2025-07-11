@@ -21,7 +21,7 @@ public class PageComponentTranslationService {
       pageComponent.setId(pageComponentId);
       pageComponentTranslationToSave.setPageComponent(pageComponent);
       pageComponentTranslationToSave.setCountryRegion(dto.countryRegion());
-      pageComponentTranslationToSave.setDevice(dto.device());
+      pageComponentTranslationToSave.setDevices(dto.devices());
       pageComponentTranslationToSave.setFirstTitle(dto.firstTitle());
       pageComponentTranslationToSave.setSecondTitle(dto.secondTitle());
       pageComponentTranslationToSave.setDescription(dto.description());
