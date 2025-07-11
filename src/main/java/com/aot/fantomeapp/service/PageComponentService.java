@@ -33,7 +33,8 @@ public class PageComponentService {
       }
       pageComponentToSave.setSection(sectionOpt.get());
       
-      if (!(dto.type().equals(ComponentType.PAGE_1) || dto.type().equals(ComponentType.PAGE_2))) {
+      if (!(dto.type().equals(ComponentType.PAGE_1) || dto.type().equals(ComponentType.PAGE_2) || dto.type().equals(ComponentType.PAGE_3) 
+         || dto.type().equals(ComponentType.PAGE_4) || dto.type().equals(ComponentType.PAGE_5))) {
          Optional<PageComponent> parentOpt = findById(dto.parentId());
          if (parentOpt.isEmpty()) {
             throw new RuntimeException("Parent component not found");

@@ -1,7 +1,7 @@
 package com.aot.fantomeapp.model;
 
 import com.aot.fantomeapp.model.enums.Device;
-import com.aot.fantomeapp.model.enums.Language;
+import com.aot.fantomeapp.model.enums.CountryRegion;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,7 +27,7 @@ public class PageComponentTranslation extends BaseEntity {
 
    @Column
    @Enumerated(EnumType.STRING)
-   private Language language;
+   private CountryRegion countryRegion;
 
    @Column
    @Enumerated(EnumType.STRING)
