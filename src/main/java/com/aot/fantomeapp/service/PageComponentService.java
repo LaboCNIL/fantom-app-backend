@@ -2,6 +2,7 @@ package com.aot.fantomeapp.service;
 
 import com.aot.fantomeapp.dto.PageComponentCreateDto;
 import com.aot.fantomeapp.dto.PageComponentDto;
+import com.aot.fantomeapp.dto.PageComponentUpdateDto;
 import com.aot.fantomeapp.mapper.PageComponentMapper;
 import com.aot.fantomeapp.model.PageComponent;
 import com.aot.fantomeapp.model.Section;
@@ -35,7 +36,7 @@ public class PageComponentService {
       
       if (!(dto.type().equals(ComponentType.PAGE_1) || dto.type().equals(ComponentType.PAGE_2) || dto.type().equals(ComponentType.PAGE_3) 
          || dto.type().equals(ComponentType.PAGE_4) || dto.type().equals(ComponentType.PAGE_5))) {
-         Optional<PageComponent> parentOpt = findById(dto.parentId());
+         Optional<PageComponent> parentOpt = pageComponentRepository.findById(dto.parentId());
          if (parentOpt.isEmpty()) {
             throw new RuntimeException("Parent component not found");
          }
@@ -55,8 +56,8 @@ public class PageComponentService {
    }
    
    public void affectNextPageComponent(Long currentPageComponentId, Long nextPageComponentId) {
-      findById(currentPageComponentId).ifPresent(currentPageComponent -> {
-         findById(nextPageComponentId).ifPresent(nextPageComponent -> {
+      pageComponentRepository.findById(currentPageComponentId).ifPresent(currentPageComponent -> {
+         pageComponentRepository.findById(nextPageComponentId).ifPresent(nextPageComponent -> {
             currentPageComponent.setNext(nextPageComponent);
             currentPageComponent.setUpdatedAt(Instant.now());
          });
@@ -64,8 +65,12 @@ public class PageComponentService {
       });
    }
 
-   public Optional<PageComponent> findById(Long id) {
-      return pageComponentRepository.findById(id);
+   public PageComponentDto findById(Long id) {
+      Optional<PageComponent> pageComponentOpt = pageComponentRepository.findById(id);
+      if (pageComponentOpt.isEmpty()) {
+         throw new RuntimeException("Page component not found");
+      }
+      return pageComponentMapper.toDto(pageComponentOpt.get());
    }
 
    public PageComponentDto findRootBySectionId(Long sectionId) {
@@ -87,8 +92,38 @@ public class PageComponentService {
    }
 
    public void delete(Long pageComponentId) {
-      findById(pageComponentId).ifPresentOrElse(pageComponentRepository::delete, ()-> {
+      pageComponentRepository.findById(pageComponentId).ifPresentOrElse(pageComponentRepository::delete, ()-> {
          throw new RuntimeException("Page component not found");
       });
+   }
+
+   public void update(Long pageComponentId, PageComponentUpdateDto dto) {
+      Optional<PageComponent> optional = pageComponentRepository.findById(pageComponentId);
+      if (optional.isEmpty()) {
+         throw new RuntimeException("Page component not found");
+      }
+      PageComponent pageComponent = optional.get();
+      
+      Optional<Section> sectionOpt = sectionService.findById(dto.sectionId());
+      if (sectionOpt.isEmpty()) {
+         throw new RuntimeException("Section not found");
+      }
+      pageComponent.setSection(sectionOpt.get());
+      
+      if (!(dto.type().equals(ComponentType.PAGE_1) || dto.type().equals(ComponentType.PAGE_2) || dto.type().equals(ComponentType.PAGE_3)
+         || dto.type().equals(ComponentType.PAGE_4) || dto.type().equals(ComponentType.PAGE_5))) {
+         Optional<PageComponent> parentOpt = pageComponentRepository.findById(dto.parentId());
+         if (parentOpt.isEmpty()) {
+            throw new RuntimeException("Parent component not found");
+         }
+         pageComponent.setParent(parentOpt.get());
+      }
+
+      pageComponent.setCode(dto.code());
+      pageComponent.setType(dto.type());
+      pageComponent.setPosition(dto.position());
+      pageComponent.setStatus(dto.status());
+      pageComponent.setUpdatedAt(Instant.now());
+      pageComponentRepository.save(pageComponent);
    }
 }
