@@ -3,6 +3,7 @@ package com.aot.fantomeapp.service;
 import com.aot.fantomeapp.dto.PageComponentCreateDto;
 import com.aot.fantomeapp.dto.PageComponentDto;
 import com.aot.fantomeapp.dto.PageComponentUpdateDto;
+import com.aot.fantomeapp.dto.PageComponentWithImageDto;
 import com.aot.fantomeapp.mapper.PageComponentMapper;
 import com.aot.fantomeapp.model.PageComponent;
 import com.aot.fantomeapp.model.Section;
@@ -73,7 +74,7 @@ public class PageComponentService {
       return pageComponentMapper.toDto(pageComponentOpt.get());
    }
 
-   public PageComponentDto findRootBySectionId(Long sectionId) {
+   public PageComponentWithImageDto findRootBySectionId(Long sectionId) {
       Optional<Section> sectionOpt = sectionService.findById(sectionId);
       if (sectionOpt.isEmpty()) {
          throw new RuntimeException("Section not found");
@@ -88,7 +89,7 @@ public class PageComponentService {
       Optional<PageComponent> rootComponentOpt = pageComponents.stream().filter(pageComponent -> pageComponent.getParent() == null &&
          !nextComponentIds.contains(pageComponent.getId())).findFirst();
 
-      return rootComponentOpt.map(pageComponentMapper::toDto).orElse(null);
+      return rootComponentOpt.map(pageComponentMapper::toDtoWithImage).orElse(null);
    }
 
    public void delete(Long pageComponentId) {

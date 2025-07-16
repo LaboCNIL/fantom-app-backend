@@ -3,6 +3,7 @@ package com.aot.fantomeapp.service;
 import com.aot.fantomeapp.dto.PageComponentTranslationCreateDto;
 import com.aot.fantomeapp.model.PageComponent;
 import com.aot.fantomeapp.model.PageComponentTranslation;
+import com.aot.fantomeapp.model.enums.TranslationStatus;
 import com.aot.fantomeapp.repository.PageComponentTranslationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ public class PageComponentTranslationService {
       pageComponentTranslationToSave.setSecondTitle(dto.secondTitle());
       pageComponentTranslationToSave.setDescription(dto.description());
       pageComponentTranslationToSave.setImage(dto.image());
+      pageComponentTranslationToSave.setStatus(TranslationStatus.DRAFT);
       pageComponentTranslationToSave.setCreatedAt(Instant.now());
       pageComponentTranslationRepository.save(pageComponentTranslationToSave);
    }

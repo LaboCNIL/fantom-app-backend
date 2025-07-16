@@ -1,8 +1,10 @@
 package com.aot.fantomeapp.model;
 
 import com.aot.fantomeapp.mapper.DeviceListConverter;
+import com.aot.fantomeapp.model.enums.ComponentStatus;
 import com.aot.fantomeapp.model.enums.Device;
 import com.aot.fantomeapp.model.enums.CountryRegion;
+import com.aot.fantomeapp.model.enums.TranslationStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,6 +21,10 @@ import java.util.List;
 @AllArgsConstructor
 public class PageComponentTranslation extends BaseEntity {
 
+   @Column
+   @Enumerated(EnumType.STRING)
+   private TranslationStatus status;
+   
    @Column
    private String firstTitle;
 
