@@ -5,11 +5,13 @@ import com.aot.fantomeapp.dto.PageComponentDto;
 import com.aot.fantomeapp.dto.PageComponentUpdateDto;
 import com.aot.fantomeapp.dto.PageComponentWithImageDto;
 import com.aot.fantomeapp.mapper.PageComponentMapper;
-import com.aot.fantomeapp.model.PageComponent;
+import com.aot.fantomeapp.model.PageComponentWithImage;
+import com.aot.fantomeapp.model.PageComponentLight;
 import com.aot.fantomeapp.model.Section;
 import com.aot.fantomeapp.model.enums.ComponentStatus;
 import com.aot.fantomeapp.model.enums.ComponentType;
-import com.aot.fantomeapp.repository.PageComponentRepository;
+import com.aot.fantomeapp.repository.PageComponentLightRepository;
+import com.aot.fantomeapp.repository.PageComponentWithImageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,12 +24,14 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PageComponentService {
 
-   private final PageComponentRepository pageComponentRepository;
+   private final PageComponentWithImageRepository pageComponentWithImageRepository;
+   private final PageComponentLightRepository pageComponentLightRepository;
    private final PageComponentMapper pageComponentMapper;
+
    protected final SectionService sectionService;
 
    public void create(Long sectionId, PageComponentCreateDto dto) {
-      PageComponent pageComponentToSave = new PageComponent();
+      PageComponentWithImage pageComponentToSave = new PageComponentWithImage();
       
       Optional<Section> sectionOpt = sectionService.findById(sectionId);
       if (sectionOpt.isEmpty()) {
@@ -37,7 +41,7 @@ public class PageComponentService {
       
       if (!(dto.type().equals(ComponentType.PAGE_1) || dto.type().equals(ComponentType.PAGE_2) || dto.type().equals(ComponentType.PAGE_3) 
          || dto.type().equals(ComponentType.PAGE_4) || dto.type().equals(ComponentType.PAGE_5))) {
-         Optional<PageComponent> parentOpt = pageComponentRepository.findById(dto.parentId());
+         Optional<PageComponentWithImage> parentOpt = pageComponentWithImageRepository.findById(dto.parentId());
          if (parentOpt.isEmpty()) {
             throw new RuntimeException("Parent component not found");
          }
@@ -48,30 +52,29 @@ public class PageComponentService {
       pageComponentToSave.setType(dto.type());
       pageComponentToSave.setPosition(dto.position());
       pageComponentToSave.setStatus(ComponentStatus.DRAFT);
-      pageComponentToSave.setCreatedAt(Instant.now());
-      pageComponentRepository.save(pageComponentToSave);
+      pageComponentWithImageRepository.save(pageComponentToSave);
    }
 
-   public List<PageComponentDto> findAllBySectionId(Long sectionId) {
-      return pageComponentMapper.toDto(pageComponentRepository.findAllBySectionId(sectionId));
+   public List<PageComponentDto> findAllLightBySectionId(Long sectionId) {
+      return pageComponentMapper.toDtoLight(pageComponentLightRepository.findAllBySectionId(sectionId));
    }
    
    public void affectNextPageComponent(Long currentPageComponentId, Long nextPageComponentId) {
-      pageComponentRepository.findById(currentPageComponentId).ifPresent(currentPageComponent -> {
-         pageComponentRepository.findById(nextPageComponentId).ifPresent(nextPageComponent -> {
+      pageComponentWithImageRepository.findById(currentPageComponentId).ifPresent(currentPageComponent -> {
+         pageComponentWithImageRepository.findById(nextPageComponentId).ifPresent(nextPageComponent -> {
             currentPageComponent.setNext(nextPageComponent);
             currentPageComponent.setUpdatedAt(Instant.now());
          });
-         pageComponentRepository.save(currentPageComponent);
+         pageComponentWithImageRepository.save(currentPageComponent);
       });
    }
 
    public PageComponentDto findById(Long id) {
-      Optional<PageComponent> pageComponentOpt = pageComponentRepository.findById(id);
+      Optional<PageComponentLight> pageComponentOpt = pageComponentLightRepository.findById(id);
       if (pageComponentOpt.isEmpty()) {
          throw new RuntimeException("Page component not found");
       }
-      return pageComponentMapper.toDto(pageComponentOpt.get());
+      return pageComponentMapper.toDtoLight(pageComponentOpt.get());
    }
 
    public PageComponentWithImageDto findRootBySectionId(Long sectionId) {
@@ -84,26 +87,26 @@ public class PageComponentService {
       if (sectionOpt.get().getCode().equals("secure-myself")) {
          typeBySection = ComponentType.PAGE_3;
       }
-      List<PageComponent> pageComponents = pageComponentRepository.findAllBySectionIdAndStatusAndType(sectionId, ComponentStatus.PUBLISHED, typeBySection);
-      List<Long> nextComponentIds = pageComponents.stream().map(PageComponent::getNext).filter(Objects::nonNull).map(PageComponent::getId).toList();
-      Optional<PageComponent> rootComponentOpt = pageComponents.stream().filter(pageComponent -> pageComponent.getParent() == null &&
+      List<PageComponentWithImage> pageComponents = pageComponentWithImageRepository.findAllBySectionIdAndStatusAndType(sectionId, ComponentStatus.PUBLISHED, typeBySection);
+      List<Long> nextComponentIds = pageComponents.stream().map(PageComponentWithImage::getNext).filter(Objects::nonNull).map(PageComponentWithImage::getId).toList();
+      Optional<PageComponentWithImage> rootComponentOpt = pageComponents.stream().filter(pageComponent -> pageComponent.getParent() == null &&
          !nextComponentIds.contains(pageComponent.getId())).findFirst();
 
       return rootComponentOpt.map(pageComponentMapper::toDtoWithImage).orElse(null);
    }
 
    public void delete(Long pageComponentId) {
-      pageComponentRepository.findById(pageComponentId).ifPresentOrElse(pageComponentRepository::delete, ()-> {
+      pageComponentWithImageRepository.findById(pageComponentId).ifPresentOrElse(pageComponentWithImageRepository::delete, ()-> {
          throw new RuntimeException("Page component not found");
       });
    }
 
    public void update(Long pageComponentId, PageComponentUpdateDto dto) {
-      Optional<PageComponent> optional = pageComponentRepository.findById(pageComponentId);
+      Optional<PageComponentWithImage> optional = pageComponentWithImageRepository.findById(pageComponentId);
       if (optional.isEmpty()) {
          throw new RuntimeException("Page component not found");
       }
-      PageComponent pageComponent = optional.get();
+      PageComponentWithImage pageComponent = optional.get();
       
       Optional<Section> sectionOpt = sectionService.findById(dto.sectionId());
       if (sectionOpt.isEmpty()) {
@@ -113,7 +116,7 @@ public class PageComponentService {
       
       if (!(dto.type().equals(ComponentType.PAGE_1) || dto.type().equals(ComponentType.PAGE_2) || dto.type().equals(ComponentType.PAGE_3)
          || dto.type().equals(ComponentType.PAGE_4) || dto.type().equals(ComponentType.PAGE_5))) {
-         Optional<PageComponent> parentOpt = pageComponentRepository.findById(dto.parentId());
+         Optional<PageComponentWithImage> parentOpt = pageComponentWithImageRepository.findById(dto.parentId());
          if (parentOpt.isEmpty()) {
             throw new RuntimeException("Parent component not found");
          }
@@ -124,7 +127,6 @@ public class PageComponentService {
       pageComponent.setType(dto.type());
       pageComponent.setPosition(dto.position());
       pageComponent.setStatus(dto.status());
-      pageComponent.setUpdatedAt(Instant.now());
-      pageComponentRepository.save(pageComponent);
+      pageComponentWithImageRepository.save(pageComponent);
    }
 }

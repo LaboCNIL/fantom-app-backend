@@ -29,7 +29,7 @@ public class PageComponentController {
    @GetMapping("section/{sectionId}")
    public ResponseEntity<List<PageComponentDto>> getPageComponentsBySectionId(@PathVariable("sectionId") Long sectionId) {
       log.debug("getPageComponentsBySectionId");
-      List<PageComponentDto> result = pageComponentService.findAllBySectionId(sectionId);
+      List<PageComponentDto> result = pageComponentService.findAllLightBySectionId(sectionId);
       return ResponseEntity.ok(result);
    }
 

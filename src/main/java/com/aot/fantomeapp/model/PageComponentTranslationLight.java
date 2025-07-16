@@ -1,0 +1,52 @@
+package com.aot.fantomeapp.model;
+
+import com.aot.fantomeapp.mapper.DeviceListConverter;
+import com.aot.fantomeapp.model.enums.Device;
+import com.aot.fantomeapp.model.enums.TranslationStatus;
+import com.aot.fantomeapp.model.enums.CountryRegion;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.List;
+
+import org.springframework.data.annotation.Immutable;
+
+@Entity
+@Table(name = "page_component_translation")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Immutable
+public class PageComponentTranslationLight {
+   @Id
+   protected Long id;
+
+   @Column
+   @Enumerated(EnumType.STRING)
+   private TranslationStatus status;
+   
+   @Column
+   private String firstTitle;
+
+   @Column
+   private String secondTitle;
+
+   @Column
+   private String description;
+
+   @Column
+   @Enumerated(EnumType.STRING)
+   private CountryRegion countryRegion;
+
+   @Convert(converter = DeviceListConverter.class)
+   @Column(name = "device")
+   private List<Device> devices;
+   
+   @ManyToOne
+   @JoinColumn(name = "page_component_id")
+   private PageComponentLight pageComponent;
+}
