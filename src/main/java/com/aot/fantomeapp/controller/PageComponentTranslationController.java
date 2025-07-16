@@ -20,4 +20,10 @@ public class PageComponentTranslationController {
       log.debug("createPageComponentTranslation");
       pageComponentTranslationService.create(pageComponentId, dto);
    }
+
+   @DeleteMapping("{pageComponentTranslationId}")
+   public void deletePageComponentTranslation(@PathVariable("pageComponentTranslationId") Long pageComponentTranslationId) {
+      log.debug("deletePageComponentTranslation");
+      pageComponentTranslationService.delete(pageComponentTranslationId);
+   }
 }

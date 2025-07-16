@@ -12,9 +12,9 @@ import java.time.Instant;
 @Service
 @RequiredArgsConstructor
 public class PageComponentTranslationService {
-   
+
    private final PageComponentTranslationRepository pageComponentTranslationRepository;
-   
+
    public void create(Long pageComponentId, PageComponentTranslationCreateDto dto) {
       PageComponentTranslation pageComponentTranslationToSave = new PageComponentTranslation();
       PageComponent pageComponent = new PageComponent();
@@ -28,5 +28,11 @@ public class PageComponentTranslationService {
       pageComponentTranslationToSave.setImage(dto.image());
       pageComponentTranslationToSave.setCreatedAt(Instant.now());
       pageComponentTranslationRepository.save(pageComponentTranslationToSave);
+   }
+
+   public void delete(Long pageComponentTranslationId) {
+      pageComponentTranslationRepository.findById(pageComponentTranslationId).ifPresentOrElse(pageComponentTranslationRepository::delete, () -> {
+         throw new RuntimeException("Page component translation not found");
+      });
    }
 }
