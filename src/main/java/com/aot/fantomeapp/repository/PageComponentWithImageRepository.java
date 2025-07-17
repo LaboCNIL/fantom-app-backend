@@ -10,8 +10,6 @@ import java.util.List;
 
 @Repository
 public interface PageComponentWithImageRepository extends JpaRepository<PageComponentWithImage, Long> {
-
-   List<PageComponentWithImage> findAllBySectionId(Long sectionId);
    
    List<PageComponentWithImage> findAllBySectionIdAndStatusAndType(Long sectionId, ComponentStatus status, ComponentType type);
 }

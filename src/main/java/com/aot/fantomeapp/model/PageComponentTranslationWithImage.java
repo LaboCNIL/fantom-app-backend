@@ -1,9 +1,8 @@
 package com.aot.fantomeapp.model;
 
 import com.aot.fantomeapp.mapper.DeviceListConverter;
-import com.aot.fantomeapp.model.enums.ComponentStatus;
-import com.aot.fantomeapp.model.enums.Device;
 import com.aot.fantomeapp.model.enums.CountryRegion;
+import com.aot.fantomeapp.model.enums.Device;
 import com.aot.fantomeapp.model.enums.TranslationStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

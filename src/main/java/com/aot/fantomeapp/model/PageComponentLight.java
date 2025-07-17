@@ -6,11 +6,9 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.springframework.data.annotation.Immutable;
 
 import java.util.List;
-
-import org.springframework.data.annotation.Immutable;
 
 @Entity
 @Table(name = "page_component")

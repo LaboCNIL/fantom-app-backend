@@ -129,4 +129,8 @@ public class PageComponentService {
       pageComponent.setStatus(dto.status());
       pageComponentWithImageRepository.save(pageComponent);
    }
+   
+   public Optional<PageComponentWithImage> findByIdWithImage(Long pageComponentId) {
+      return pageComponentWithImageRepository.findById(pageComponentId);
+   }
 }

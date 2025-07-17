@@ -6,6 +6,6 @@ import com.aot.fantomeapp.model.enums.TranslationStatus;
 
 import java.util.List;
 
-public record PageComponentTranslationWithImageDto(Long id, TranslationStatus status, String firstTitle, String secondTitle, String description,
-                                                   CountryRegion countryRegion, List<Device> devices, String image, Long pageComponentId) {
+public record PageComponentTranslationWithImageDto(Long id, CountryRegion countryRegion, List<Device> devices, TranslationStatus status, 
+                                                   String firstTitle, String secondTitle, String description, String image, Long pageComponentId) {
 }
