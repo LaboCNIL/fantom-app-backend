@@ -5,7 +5,6 @@ import com.aot.fantomeapp.dto.PageComponentTranslationWithImageDto;
 import com.aot.fantomeapp.mapper.PageComponentTranslationMapper;
 import com.aot.fantomeapp.model.PageComponentTranslationWithImage;
 import com.aot.fantomeapp.model.PageComponentWithImage;
-import com.aot.fantomeapp.model.enums.TranslationStatus;
 import com.aot.fantomeapp.repository.PageComponentTranslationWithImageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

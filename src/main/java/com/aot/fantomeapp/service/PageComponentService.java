@@ -5,11 +5,13 @@ import com.aot.fantomeapp.dto.PageComponentDto;
 import com.aot.fantomeapp.dto.PageComponentUpdateDto;
 import com.aot.fantomeapp.dto.PageComponentWithImageDto;
 import com.aot.fantomeapp.mapper.PageComponentMapper;
-import com.aot.fantomeapp.model.PageComponentWithImage;
 import com.aot.fantomeapp.model.PageComponentLight;
+import com.aot.fantomeapp.model.PageComponentTranslationWithImage;
+import com.aot.fantomeapp.model.PageComponentWithImage;
 import com.aot.fantomeapp.model.Section;
 import com.aot.fantomeapp.model.enums.ComponentStatus;
 import com.aot.fantomeapp.model.enums.ComponentType;
+import com.aot.fantomeapp.model.enums.TranslationStatus;
 import com.aot.fantomeapp.repository.PageComponentLightRepository;
 import com.aot.fantomeapp.repository.PageComponentWithImageRepository;
 import lombok.RequiredArgsConstructor;
@@ -98,7 +100,8 @@ public class PageComponentService {
       Optional<PageComponentWithImage> rootComponentOpt = pageComponents.stream().filter(pageComponent -> pageComponent.getParent() == null &&
          !nextComponentIds.contains(pageComponent.getId())).findFirst();
 
-      return rootComponentOpt.map(pageComponentMapper::toDtoWithImage).orElse(null);
+      return rootComponentOpt.map(pageComponentWithImage -> 
+         pageComponentMapper.toDtoWithImage(cleanUnpublished(pageComponentWithImage))).orElse(null);
    }
 
    public void delete(Long pageComponentId) {
@@ -145,5 +148,38 @@ public class PageComponentService {
    
    public Optional<PageComponentWithImage> findByIdWithImage(Long pageComponentId) {
       return pageComponentWithImageRepository.findById(pageComponentId);
+   }
+
+   private PageComponentWithImage cleanUnpublished(PageComponentWithImage component) {
+      // clean component itself
+      if (component == null || component.getStatus() != ComponentStatus.PUBLISHED) {
+         return null;
+      }
+
+      // clean translations
+      if (component.getTranslations() != null) {
+         List<PageComponentTranslationWithImage> publishedTranslations = component.getTranslations().stream()
+            .filter(t -> t.getStatus().equals(TranslationStatus.PUBLISHED))
+            .toList();
+         component.setTranslations(publishedTranslations);
+      }
+
+      // clean next component
+      if (component.getNext() != null && component.getNext().getStatus().equals(ComponentStatus.PUBLISHED)) {
+         component.setNext(cleanUnpublished(component.getNext()));
+      } else {
+         component.setNext(null);
+      }
+
+      // clean children components
+      if (component.getChildren() != null) {
+         List<PageComponentWithImage> publishedChildren = component.getChildren().stream()
+            .filter(child -> child.getStatus().equals(ComponentStatus.PUBLISHED))
+            .map(this::cleanUnpublished) // récursion
+            .toList();
+         component.setChildren(publishedChildren);
+      }
+
+      return component;
    }
 }
