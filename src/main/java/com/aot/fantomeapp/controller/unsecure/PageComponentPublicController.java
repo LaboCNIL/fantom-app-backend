@@ -4,6 +4,9 @@ import com.aot.fantomeapp.dto.PageComponentWithImageDto;
 import com.aot.fantomeapp.service.PageComponentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +25,13 @@ public class PageComponentPublicController {
    public ResponseEntity<PageComponentWithImageDto> getRootPageComponentBySectionId(@PathVariable("sectionId") Long sectionId) {
       log.debug("getRootPageComponentBySectionId");
       PageComponentWithImageDto result = pageComponentService.findRootBySectionId(sectionId);
+      return ResponseEntity.ok(result);
+   }
+
+   @GetMapping("home-page-link-ids")
+   public ResponseEntity<Map<String, Long>> getHomePageLinkIds() {
+      log.debug("getHomePageLinkIds");
+      Map<String, Long> result = pageComponentService.findHomePageLinkIds();
       return ResponseEntity.ok(result);
    }
 }

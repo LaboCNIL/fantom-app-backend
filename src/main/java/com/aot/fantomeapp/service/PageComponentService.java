@@ -13,16 +13,22 @@ import com.aot.fantomeapp.model.enums.ComponentType;
 import com.aot.fantomeapp.repository.PageComponentLightRepository;
 import com.aot.fantomeapp.repository.PageComponentWithImageRepository;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class PageComponentService {
+
+   private static final String CYBERHARCELEMENT_CODE = "3.3_cyberharcelement";
 
    private final PageComponentWithImageRepository pageComponentWithImageRepository;
    private final PageComponentLightRepository pageComponentLightRepository;
@@ -128,6 +134,13 @@ public class PageComponentService {
       pageComponent.setPosition(dto.position());
       pageComponent.setStatus(dto.status());
       pageComponentWithImageRepository.save(pageComponent);
+   }
+
+   public Map<String, Long> findHomePageLinkIds() {
+      return pageComponentLightRepository.findIdByCodes(
+            List.of(CYBERHARCELEMENT_CODE))
+         .stream()
+         .collect(Collectors.toMap(Pair::getFirst, Pair::getSecond));
    }
    
    public Optional<PageComponentWithImage> findByIdWithImage(Long pageComponentId) {
