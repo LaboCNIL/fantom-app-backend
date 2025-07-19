@@ -7,9 +7,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PageComponentWithImageRepository extends JpaRepository<PageComponentWithImage, Long> {
    
    List<PageComponentWithImage> findAllBySectionIdAndStatusAndType(Long sectionId, ComponentStatus status, ComponentType type);
+
+   Optional<PageComponentWithImage> findByCode(String code);
+   
 }

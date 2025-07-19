@@ -63,4 +63,11 @@ public class PageComponentController {
       log.debug("deletePageComponent");
       pageComponentService.delete(pageComponentId);
    }
+
+   @PreAuthorize("hasRole('ADMIN')")
+   @PutMapping("{pageComponentId}/duplicate")
+   public void duplicatePageComponent(@PathVariable("pageComponentId") Long pageComponentId, @RequestBody String newCodeString) {
+      log.debug("duplicatePageComponent");
+      pageComponentService.duplicateComponent(pageComponentId, newCodeString);
+   }
 }
