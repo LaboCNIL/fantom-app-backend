@@ -11,6 +11,7 @@ import com.aot.fantomeapp.model.PageComponentWithImage;
 import com.aot.fantomeapp.model.Section;
 import com.aot.fantomeapp.model.enums.ComponentStatus;
 import com.aot.fantomeapp.model.enums.ComponentType;
+import com.aot.fantomeapp.model.enums.Device;
 import com.aot.fantomeapp.model.enums.TranslationStatus;
 import com.aot.fantomeapp.repository.PageComponentLightRepository;
 import com.aot.fantomeapp.repository.PageComponentWithImageRepository;
@@ -92,7 +93,7 @@ public class PageComponentService {
       return pageComponentMapper.toDtoLight(pageComponentOpt.get());
    }
 
-   public PageComponentWithImageDto findRootBySectionId(Long sectionId) {
+   public PageComponentWithImageDto findRootBySectionId(Long sectionId, List<Device> devices) {
       Optional<Section> sectionOpt = sectionService.findById(sectionId);
       if (sectionOpt.isEmpty()) {
          throw new RuntimeException("Section not found");

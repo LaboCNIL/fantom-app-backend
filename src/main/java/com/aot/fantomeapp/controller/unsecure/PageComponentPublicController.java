@@ -1,15 +1,18 @@
 package com.aot.fantomeapp.controller.unsecure;
 
 import com.aot.fantomeapp.dto.PageComponentWithImageDto;
+import com.aot.fantomeapp.model.enums.Device;
 import com.aot.fantomeapp.service.PageComponentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,9 +25,11 @@ public class PageComponentPublicController {
    private final PageComponentService pageComponentService;
 
    @GetMapping("section/{sectionId}/root")
-   public ResponseEntity<PageComponentWithImageDto> getRootPageComponentBySectionId(@PathVariable("sectionId") Long sectionId) {
+   public ResponseEntity<PageComponentWithImageDto> getRootPageComponentBySectionId(
+         @PathVariable("sectionId") Long sectionId, @RequestHeader("X-Devices") List<Device> devices) {
       log.debug("getRootPageComponentBySectionId");
-      PageComponentWithImageDto result = pageComponentService.findRootBySectionId(sectionId);
+      log.debug("Devices : {}", devices);
+      PageComponentWithImageDto result = pageComponentService.findRootBySectionId(sectionId, devices);
       return ResponseEntity.ok(result);
    }
 
