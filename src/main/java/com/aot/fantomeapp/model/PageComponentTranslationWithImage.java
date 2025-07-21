@@ -41,9 +41,9 @@ public class PageComponentTranslationWithImage extends BaseEntity {
    @Column(name = "device")
    private List<Device> devices;
 
-   @Column
-   //@Basic(fetch = FetchType.LAZY)
-   private String image;
+   @ManyToOne
+   @JoinColumn(name = "image_id")
+   private Image image;
    
    @ManyToOne
    @JoinColumn(name = "page_component_id")

@@ -1,4 +1,6 @@
 logging:
+  file:
+    path: ./logs
   level:
     root: INFO
     com.aot.fantomeapp: DEBUG

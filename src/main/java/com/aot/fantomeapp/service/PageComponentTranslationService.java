@@ -3,6 +3,7 @@ package com.aot.fantomeapp.service;
 import com.aot.fantomeapp.dto.PageComponentTranslationCreateUpdateDto;
 import com.aot.fantomeapp.dto.PageComponentTranslationWithImageDto;
 import com.aot.fantomeapp.mapper.PageComponentTranslationMapper;
+import com.aot.fantomeapp.model.Image;
 import com.aot.fantomeapp.model.PageComponentTranslationWithImage;
 import com.aot.fantomeapp.model.PageComponentWithImage;
 import com.aot.fantomeapp.repository.PageComponentTranslationWithImageRepository;
@@ -19,6 +20,7 @@ public class PageComponentTranslationService {
    private final PageComponentTranslationWithImageRepository pageComponentTranslationWithImageRepository;
    private final PageComponentTranslationMapper pageComponentTranslationMapper;
    private final PageComponentService pageComponentService;
+   private final ImageService imageService;
    
    public void create(Long pageComponentId, PageComponentTranslationCreateUpdateDto dto) {
       Optional<PageComponentWithImage> pageComponentOpt = pageComponentService.findByIdWithImage(pageComponentId);
@@ -33,7 +35,11 @@ public class PageComponentTranslationService {
       pageComponentTranslationToSave.setFirstTitle(dto.firstTitle());
       pageComponentTranslationToSave.setSecondTitle(dto.secondTitle());
       pageComponentTranslationToSave.setDescription(dto.description());
-      pageComponentTranslationToSave.setImage(dto.image());
+      
+      // Convertir l'image base64 en entité Image
+      Image image = imageService.saveImageFromBase64(dto.image());
+      pageComponentTranslationToSave.setImage(image);
+      
       pageComponentTranslationToSave.setStatus(dto.status());
       pageComponentTranslationWithImageRepository.save(pageComponentTranslationToSave);
    }
@@ -60,7 +66,11 @@ public class PageComponentTranslationService {
          pageComponentTranslation.setFirstTitle(dto.firstTitle());
          pageComponentTranslation.setSecondTitle(dto.secondTitle());
          pageComponentTranslation.setDescription(dto.description());
-         pageComponentTranslation.setImage(dto.image());
+         
+         // Convertir l'image base64 en entité Image
+         Image image = imageService.saveImageFromBase64(dto.image());
+         pageComponentTranslation.setImage(image);
+         
          pageComponentTranslation.setUpdatedAt(Instant.now());
 
          pageComponentTranslationWithImageRepository.save(pageComponentTranslation);
