@@ -54,3 +54,5 @@ BEGIN
         
     END LOOP;
 END $$;
+
+ALTER TABLE page_component_translation DROP COLUMN image;
