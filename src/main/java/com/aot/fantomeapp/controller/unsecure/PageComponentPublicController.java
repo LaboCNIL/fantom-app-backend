@@ -24,12 +24,13 @@ public class PageComponentPublicController {
 
    private final PageComponentService pageComponentService;
 
+   
    @GetMapping("section/{sectionId}/root")
-   public ResponseEntity<PageComponentWithImageDto> getRootPageComponentBySectionId(
+   public ResponseEntity<Map<Long, PageComponentWithImageDto>> getPageComponentBySectionId(
          @PathVariable("sectionId") Long sectionId, @RequestHeader("X-Devices") List<Device> devices) {
       log.debug("getRootPageComponentBySectionId");
       log.debug("Devices : {}", devices);
-      PageComponentWithImageDto result = pageComponentService.findRootBySectionId(sectionId, devices);
+      Map<Long, PageComponentWithImageDto> result = pageComponentService.findAllPublishedBySectionId(sectionId, devices);
       return ResponseEntity.ok(result);
    }
 

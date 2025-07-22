@@ -41,6 +41,7 @@ public class PageComponentWithImage extends BaseEntity {
    private PageComponentWithImage parent;
 
    @OneToMany(mappedBy = "parent")
+   @OrderBy("position ASC")
    private List<PageComponentWithImage> children;
    
    @OneToOne

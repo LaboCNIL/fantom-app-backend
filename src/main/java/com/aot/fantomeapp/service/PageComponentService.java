@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -93,23 +94,18 @@ public class PageComponentService {
       return pageComponentMapper.toDtoLight(pageComponentOpt.get());
    }
 
-   public PageComponentWithImageDto findRootBySectionId(Long sectionId, List<Device> devices) {
+   public Map<Long, PageComponentWithImageDto> findAllPublishedBySectionId(Long sectionId, List<Device> devices) {
       Optional<Section> sectionOpt = sectionService.findById(sectionId);
       if (sectionOpt.isEmpty()) {
          throw new RuntimeException("Section not found");
       }
       
-      ComponentType typeBySection = ComponentType.PAGE_1;
-      if (sectionOpt.get().getCode().equals("secure-myself")) {
-         typeBySection = ComponentType.PAGE_3;
-      }
-      List<PageComponentWithImage> pageComponents = pageComponentWithImageRepository.findAllBySectionIdAndStatusAndType(sectionId, ComponentStatus.PUBLISHED, typeBySection);
-      List<Long> nextComponentIds = pageComponents.stream().map(PageComponentWithImage::getNext).filter(Objects::nonNull).map(PageComponentWithImage::getId).toList();
-      Optional<PageComponentWithImage> rootComponentOpt = pageComponents.stream().filter(pageComponent -> pageComponent.getParent() == null &&
-         !nextComponentIds.contains(pageComponent.getId())).findFirst();
+      List<PageComponentWithImage> pageComponents = pageComponentWithImageRepository.findAllBySectionIdAndStatus(sectionId, ComponentStatus.PUBLISHED);
 
-      return rootComponentOpt.map(pageComponentWithImage -> 
-         pageComponentMapper.toDtoWithImage(cleanUnpublished(pageComponentWithImage))).orElse(null);
+      return pageComponents.stream()
+         .map(pageComponentWithImage -> 
+            pageComponentMapper.toDtoWithImage(cleanUnpublished(pageComponentWithImage)))
+         .collect(Collectors.toMap(PageComponentWithImageDto::id, Function.identity()));
    }
 
    public void delete(Long pageComponentId) {
@@ -170,22 +166,6 @@ public class PageComponentService {
             .filter(t -> t.getStatus().equals(TranslationStatus.PUBLISHED))
             .toList();
          component.setTranslations(publishedTranslations);
-      }
-
-      // clean next component
-      if (component.getNext() != null && component.getNext().getStatus().equals(ComponentStatus.PUBLISHED)) {
-         component.setNext(cleanUnpublished(component.getNext()));
-      } else {
-         component.setNext(null);
-      }
-
-      // clean children components
-      if (component.getChildren() != null) {
-         List<PageComponentWithImage> publishedChildren = component.getChildren().stream()
-            .filter(child -> child.getStatus().equals(ComponentStatus.PUBLISHED))
-            .map(this::cleanUnpublished) // récursion
-            .toList();
-         component.setChildren(publishedChildren);
       }
 
       return component;

@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface PageComponentWithImageRepository extends JpaRepository<PageComponentWithImage, Long> {
    
-   List<PageComponentWithImage> findAllBySectionIdAndStatusAndType(Long sectionId, ComponentStatus status, ComponentType type);
+   List<PageComponentWithImage> findAllBySectionIdAndStatus(Long sectionId, ComponentStatus status);
 
    Optional<PageComponentWithImage> findByCode(String code);
    
