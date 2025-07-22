@@ -13,7 +13,26 @@ import java.util.List;
 @Repository
 public interface PageComponentLightRepository extends JpaRepository<PageComponentLight, Long> {
 
-   List<PageComponentLight> findAllBySectionId(Long sectionId);
+   // List<PageComponentLight> findAllBySectionId(Long sectionId);
+   @Query("""
+      SELECT p 
+      FROM PageComponentLight p 
+         LEFT JOIN FETCH p.section
+         LEFT JOIN FETCH p.parent
+         LEFT JOIN FETCH p.next
+         LEFT JOIN FETCH p.children
+      WHERE p.section.id = :sectionId
+   """)
+   List<PageComponentLight> findAllBySectionId(@Param("sectionId") Long sectionId);
+
+   @Query("""
+      SELECT p 
+      FROM PageComponentLight p 
+         LEFT JOIN FETCH p.translations
+      WHERE p IN :pageComponents
+   """)
+   List<PageComponentLight> findAllWithTranslations(
+         @Param("pageComponents") List<PageComponentLight> pageComponents);
 
    @Query("""
       SELECT p.code, p.id 

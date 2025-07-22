@@ -36,18 +36,23 @@ public class PageComponentWithImage extends BaseEntity {
    @JoinColumn(name = "section_id")
    private Section section;
 
-   @ManyToOne
+   @ManyToOne(fetch = FetchType.LAZY)
    @JoinColumn(name = "parent_page_component_id")
    private PageComponentWithImage parent;
+   @Column(name = "parent_page_component_id", insertable = false, updatable = false)
+   private Long parentId;
 
+   //@OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
    @OneToMany(mappedBy = "parent")
    @OrderBy("position ASC")
    private List<PageComponentWithImage> children;
    
-   @OneToOne
+   @OneToOne(fetch = FetchType.LAZY)
    @JoinColumn(name = "next_page_component_id")
    private PageComponentWithImage next;
+   @Column(name = "next_page_component_id", insertable = false, updatable = false)
+   private Long nextId;
    
-   @OneToMany(mappedBy = "pageComponent")
+   @OneToMany(mappedBy = "pageComponent", fetch = FetchType.LAZY)
    private List<PageComponentTranslationWithImage> translations;
 }

@@ -73,7 +73,10 @@ public class PageComponentService {
    }
 
    public List<PageComponentDto> findAllLightBySectionId(Long sectionId) {
-      return pageComponentMapper.toDtoLight(pageComponentLightRepository.findAllBySectionId(sectionId));
+      List<PageComponentLight> pageComponents = pageComponentLightRepository.findAllBySectionId(sectionId);
+      pageComponents = pageComponentLightRepository.findAllWithTranslations(pageComponents);
+      return pageComponentMapper.toDtoLight(pageComponents);
+      // return pageComponentMapper.toDtoLight(pageComponentLightRepository.findAllBySectionId(sectionId));
    }
    
    public void affectNextPageComponent(Long currentPageComponentId, Long nextPageComponentId) {
@@ -101,10 +104,10 @@ public class PageComponentService {
       }
       
       List<PageComponentWithImage> pageComponents = pageComponentWithImageRepository.findAllBySectionIdAndStatus(sectionId, ComponentStatus.PUBLISHED);
-
+      pageComponents = pageComponentWithImageRepository.findAllWithTranslations(pageComponents, TranslationStatus.PUBLISHED);
       return pageComponents.stream()
          .map(pageComponentWithImage -> 
-            pageComponentMapper.toDtoWithImage(cleanUnpublished(pageComponentWithImage)))
+            pageComponentMapper.toDtoWithImage(pageComponentWithImage))
          .collect(Collectors.toMap(PageComponentWithImageDto::id, Function.identity()));
    }
 
@@ -152,23 +155,6 @@ public class PageComponentService {
    
    public Optional<PageComponentWithImage> findByIdWithImage(Long pageComponentId) {
       return pageComponentWithImageRepository.findById(pageComponentId);
-   }
-
-   private PageComponentWithImage cleanUnpublished(PageComponentWithImage component) {
-      // clean component itself
-      if (component == null || component.getStatus() != ComponentStatus.PUBLISHED) {
-         return null;
-      }
-
-      // clean translations
-      if (component.getTranslations() != null) {
-         List<PageComponentTranslationWithImage> publishedTranslations = component.getTranslations().stream()
-            .filter(t -> t.getStatus().equals(TranslationStatus.PUBLISHED))
-            .toList();
-         component.setTranslations(publishedTranslations);
-      }
-
-      return component;
    }
 
    public void duplicateComponent(Long pageComponentId, String newCodeString) {

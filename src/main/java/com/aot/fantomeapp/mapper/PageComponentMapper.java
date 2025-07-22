@@ -23,15 +23,11 @@ public interface PageComponentMapper {
    @Mapping(source = "section.id", target = "sectionId")
    List<PageComponentDto> toDtoLight(List<PageComponentLight> entities);
    
-   @Mapping(source = "parent.id", target = "parentId")
    @Mapping(source = "section.id", target = "sectionId")
-   @Mapping(source = "next.id", target = "nextId")
    @Mapping(source = "children", target = "childrenIdList", qualifiedByName = "toChildrenIdList")
    PageComponentWithImageDto toDtoWithImage(PageComponentWithImage entity);
 
-   @Mapping(source = "parent.id", target = "parentId")
    @Mapping(source = "section.id", target = "sectionId")
-   @Mapping(source = "next.id", target = "nextId")
    @Mapping(source = "children", target = "childrenIdList", qualifiedByName = "toChildrenIdList")
    List<PageComponentWithImageDto> toDtoWithImage(List<PageComponentWithImage> entities);
 

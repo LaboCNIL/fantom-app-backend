@@ -35,21 +35,21 @@ public class PageComponentLight {
    @Column
    private Integer position;
    
-   @OneToOne
+   @OneToOne(fetch = FetchType.LAZY)
    @JoinColumn(name = "section_id")
    private Section section;
 
-   @ManyToOne
+   @ManyToOne(fetch = FetchType.LAZY)
    @JoinColumn(name = "parent_page_component_id")
    private PageComponentLight parent;
 
-   @OneToMany(mappedBy = "parent")
+   @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
    private List<PageComponentLight> children;
    
-   @OneToOne
+   @OneToOne(fetch = FetchType.LAZY)
    @JoinColumn(name = "next_page_component_id")
    private PageComponentLight next;
    
-   @OneToMany(mappedBy = "pageComponent")
+   @OneToMany(mappedBy = "pageComponent", fetch = FetchType.LAZY)
    private List<PageComponentTranslationLight> translations;
 }
