@@ -110,3 +110,4 @@ app:
       paths: /actuator/**,/actuator,/config,/public/**
     cors: 
       allowed-origins: #via ENV
+  imageCacheMaxAge: 604_800 #7 days

@@ -24,8 +24,12 @@ public abstract class PageComponentTranslationMapper {
    @Mapping(source = "image", target = "image", qualifiedByName = "imageToBase64")
    public abstract PageComponentTranslationWithImageDto toDtoWithImage(PageComponentTranslationWithImage entity);
 
-   @org.mapstruct.Named("imageToBase64")
-   protected String imageToBase64(Image image) {
-      return imageService.convertImageToBase64(image);
-   }
+       @org.mapstruct.Named("imageToBase64")
+    protected String imageToBase64(Image image) {
+        if (image == null || image.getId() == null) {
+            return null;
+        }
+        // Retourner l'URL de l'image au lieu du contenu base64
+        return "/api/public/images/" + image.getId();
+    }
 }
