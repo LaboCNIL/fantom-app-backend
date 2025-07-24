@@ -14,15 +14,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Mapper(componentModel = "spring")
 public abstract class PageComponentTranslationMapper {
 
-   @Autowired
-   protected ImageService imageService;
+    public static final String IMAGE_URL = "/api/public/images/";
 
-   @Mapping(source = "pageComponent.id", target = "pageComponentId")
-   public abstract PageComponentTranslationDto toDtoLight(PageComponentTranslationLight entity);
+    @Autowired
+    protected ImageService imageService;
 
-   @Mapping(source = "pageComponent.id", target = "pageComponentId")
-   @Mapping(source = "image", target = "image", qualifiedByName = "imageToBase64")
-   public abstract PageComponentTranslationWithImageDto toDtoWithImage(PageComponentTranslationWithImage entity);
+    @Mapping(source = "pageComponent.id", target = "pageComponentId")
+    public abstract PageComponentTranslationDto toDtoLight(PageComponentTranslationLight entity);
+
+    @Mapping(source = "pageComponent.id", target = "pageComponentId")
+    @Mapping(source = "image", target = "image", qualifiedByName = "imageToBase64")
+    public abstract PageComponentTranslationWithImageDto toDtoWithImage(PageComponentTranslationWithImage entity);
 
        @org.mapstruct.Named("imageToBase64")
     protected String imageToBase64(Image image) {
@@ -30,6 +32,6 @@ public abstract class PageComponentTranslationMapper {
             return null;
         }
         // Retourner l'URL de l'image au lieu du contenu base64
-        return "/api/public/images/" + image.getId();
+        return IMAGE_URL + image.getId();
     }
 }
