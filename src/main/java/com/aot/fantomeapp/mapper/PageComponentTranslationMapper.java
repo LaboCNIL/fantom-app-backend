@@ -9,6 +9,7 @@ import com.aot.fantomeapp.service.ImageService;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(componentModel = "spring")
@@ -23,15 +24,14 @@ public abstract class PageComponentTranslationMapper {
     public abstract PageComponentTranslationDto toDtoLight(PageComponentTranslationLight entity);
 
     @Mapping(source = "pageComponent.id", target = "pageComponentId")
-    @Mapping(source = "image", target = "image", qualifiedByName = "imageToBase64")
+    @Mapping(source = "imageId", target = "image", qualifiedByName = "imageIdToImageUrl")
     public abstract PageComponentTranslationWithImageDto toDtoWithImage(PageComponentTranslationWithImage entity);
 
-       @org.mapstruct.Named("imageToBase64")
-    protected String imageToBase64(Image image) {
-        if (image == null || image.getId() == null) {
+    @Named("imageIdToImageUrl")
+    protected String imageIdToImageUrl(Long imageId) {
+        if (imageId == null) {
             return null;
         }
-        // Retourner l'URL de l'image au lieu du contenu base64
-        return IMAGE_URL + image.getId();
+        return IMAGE_URL + imageId;
     }
 }

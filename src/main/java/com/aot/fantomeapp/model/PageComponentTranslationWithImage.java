@@ -44,6 +44,9 @@ public class PageComponentTranslationWithImage extends BaseEntity {
    @ManyToOne(fetch = FetchType.LAZY)
    @JoinColumn(name = "image_id")
    private Image image;
+
+   @Column(name = "image_id", insertable = false, updatable = false)
+   private Long imageId;
    
    @ManyToOne(fetch = FetchType.LAZY)
    @JoinColumn(name = "page_component_id")

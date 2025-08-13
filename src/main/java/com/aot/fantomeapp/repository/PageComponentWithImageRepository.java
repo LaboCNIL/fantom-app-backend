@@ -33,7 +33,6 @@ public interface PageComponentWithImageRepository extends JpaRepository<PageComp
       SELECT p 
       FROM PageComponentWithImage p 
          LEFT JOIN FETCH p.translations t
-         LEFT JOIN FETCH t.image
       WHERE p IN :pageComponents
          AND t.status = :status
    """)
