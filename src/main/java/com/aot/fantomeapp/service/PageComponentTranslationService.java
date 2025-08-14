@@ -50,12 +50,12 @@ public class PageComponentTranslationService {
       });
    }
 
-   public PageComponentTranslationWithImageDto findByIdWithImage(Long pageComponentTranslationId) {
+   public PageComponentTranslationWithImageDto findByIdWithImageBase64(Long pageComponentTranslationId) {
       Optional<PageComponentTranslationWithImage> optional = pageComponentTranslationWithImageRepository.findById(pageComponentTranslationId);
       if (optional.isEmpty()) {
          throw new RuntimeException("Page component translation not found");
       }
-      return pageComponentTranslationMapper.toDtoWithImage(optional.get());
+      return pageComponentTranslationMapper.toDtoWithImageBase64(optional.get());
    }
 
    public void update(Long pageComponentTranslationId, PageComponentTranslationCreateUpdateDto dto) {

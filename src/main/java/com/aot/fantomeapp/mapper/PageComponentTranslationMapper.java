@@ -25,7 +25,14 @@ public abstract class PageComponentTranslationMapper {
 
     @Mapping(source = "pageComponent.id", target = "pageComponentId")
     @Mapping(source = "imageId", target = "image", qualifiedByName = "imageIdToImageUrl")
+    @Named("toTranslationsWithImageUrl")
     public abstract PageComponentTranslationWithImageDto toDtoWithImage(PageComponentTranslationWithImage entity);
+
+    @Mapping(source = "pageComponent.id", target = "pageComponentId")
+    @Mapping(source = "image", target = "image", qualifiedByName = "imageToBase64")
+    @Named("toTranslationsWithImageBase64")
+    public abstract PageComponentTranslationWithImageDto toDtoWithImageBase64(PageComponentTranslationWithImage entity);
+
 
     @Named("imageIdToImageUrl")
     protected String imageIdToImageUrl(Long imageId) {
@@ -34,4 +41,9 @@ public abstract class PageComponentTranslationMapper {
         }
         return IMAGE_URL + imageId;
     }
+
+    @Named("imageToBase64")
+   protected String imageToBase64(Image image) {
+      return imageService.convertImageToBase64(image);
+   }
 }

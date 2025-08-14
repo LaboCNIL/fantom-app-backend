@@ -21,7 +21,7 @@ public class PageComponentTranslationController {
    @GetMapping("{pageComponentTranslationId}")
    public ResponseEntity<PageComponentTranslationWithImageDto> getPageComponentTranslation(@PathVariable("pageComponentTranslationId") Long pageComponentTranslationId) {
       log.debug("getPageComponentTranslation");
-      PageComponentTranslationWithImageDto result = pageComponentTranslationService.findByIdWithImage(pageComponentTranslationId);
+      PageComponentTranslationWithImageDto result = pageComponentTranslationService.findByIdWithImageBase64(pageComponentTranslationId);
       return ResponseEntity.ok(result);
    }
 

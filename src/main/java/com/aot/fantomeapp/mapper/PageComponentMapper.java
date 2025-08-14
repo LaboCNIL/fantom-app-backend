@@ -25,10 +25,12 @@ public interface PageComponentMapper {
    
    @Mapping(source = "section.id", target = "sectionId")
    @Mapping(source = "children", target = "childrenIdList", qualifiedByName = "toChildrenIdList")
+   @Mapping(source = "translations", target = "translations", qualifiedByName = "toTranslationsWithImageUrl")
    PageComponentWithImageDto toDtoWithImage(PageComponentWithImage entity);
 
    @Mapping(source = "section.id", target = "sectionId")
    @Mapping(source = "children", target = "childrenIdList", qualifiedByName = "toChildrenIdList")
+   @Mapping(source = "translations", target = "translations", qualifiedByName = "toTranslationsWithImageUrl")
    List<PageComponentWithImageDto> toDtoWithImage(List<PageComponentWithImage> entities);
 
    @Named("toChildrenIdList")
