@@ -68,7 +68,7 @@ public class PageComponentService {
       pageComponentToSave.setCode(dto.code());
       pageComponentToSave.setType(dto.type());
       pageComponentToSave.setPosition(dto.position());
-      pageComponentToSave.setStatus(ComponentStatus.DRAFT);
+      pageComponentToSave.setStatus(ComponentStatus.PUBLISHED);
       pageComponentWithImageRepository.save(pageComponentToSave);
    }
 
@@ -179,7 +179,7 @@ public class PageComponentService {
       duplicatedComponent.setCode(newCodeString + "_" + originalComponent.getCode());
       duplicatedComponent.setType(originalComponent.getType());
       duplicatedComponent.setPosition(originalComponent.getPosition());
-      duplicatedComponent.setStatus(ComponentStatus.DRAFT);
+      duplicatedComponent.setStatus(ComponentStatus.PUBLISHED);
       // on save pour récupérer l'id
       duplicatedComponent = pageComponentWithImageRepository.save(duplicatedComponent);
       duplicateTranslations(originalComponent, duplicatedComponent);
