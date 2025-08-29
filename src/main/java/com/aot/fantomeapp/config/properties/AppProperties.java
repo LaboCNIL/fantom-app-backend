@@ -15,6 +15,8 @@ public class AppProperties {
 
    private String version;
 
+   private String urlApp;
+
    @NestedConfigurationProperty
    private SSOProperties sso;
 }

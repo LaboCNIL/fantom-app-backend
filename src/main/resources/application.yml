@@ -100,7 +100,7 @@ server:
 
 app:
   version: "${project.version}"
-  
+  urlApp: "https://sandbox.fantome-app.aot.agency/"
   sso:
     issuer: "${spring.security.oauth2.resourceserver.jwt.issuer-uri}"
     clientID: "${spring.security.oauth2.client.registration.keycloak.client-id}"

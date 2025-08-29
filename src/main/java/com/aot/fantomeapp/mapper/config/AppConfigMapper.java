@@ -10,7 +10,7 @@ public class AppConfigMapper {
    public static AppConfigDto appPropertiesToDto(AppProperties properties) {
       return AppConfigDto.builder()
          .version(properties.getVersion())
-         
+         .urlApp(properties.getUrlApp())
          .sso(ssoConfigToDto(properties.getSso()))
          
          .build();

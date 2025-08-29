@@ -8,6 +8,8 @@ import lombok.Data;
 public class AppConfigDto {
    private String version;
 
+   private String urlApp;
+
    private SSOConfigDto sso;
 
 }
