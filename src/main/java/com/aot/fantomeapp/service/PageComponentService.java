@@ -104,7 +104,10 @@ public class PageComponentService {
       }
       
       List<PageComponentWithImage> pageComponents = pageComponentWithImageRepository.findAllBySectionIdAndStatus(sectionId, ComponentStatus.PUBLISHED);
-      pageComponents = pageComponentWithImageRepository.findAllWithTranslations(pageComponents, TranslationStatus.PUBLISHED);
+
+      // complétio ndes pages components récupérés avec les traductions
+      pageComponents = pageComponentWithImageRepository.findAllWithTranslations(
+         pageComponents, TranslationStatus.PUBLISHED, Device.getMainDevice(devices));
       return pageComponents.stream()
          .map(pageComponentWithImage -> 
             pageComponentMapper.toDtoWithImage(pageComponentWithImage))
