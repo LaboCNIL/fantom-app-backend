@@ -20,7 +20,7 @@ public class SectionController {
 
    private final SectionService sectionService;
    
-   @PreAuthorize("hasRole('ADMIN')")
+   @PreAuthorize("hasAnyAuthority('ADMIN', 'TRANSLATOR')")
    @GetMapping
    public ResponseEntity<List<Section>> getSections() {
       log.debug("getSections");

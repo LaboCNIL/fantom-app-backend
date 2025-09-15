@@ -12,4 +12,5 @@ public class UserDto {
    private String email;
    private String name;
    private List<String> roles;
+   private List<String> languages;
 }

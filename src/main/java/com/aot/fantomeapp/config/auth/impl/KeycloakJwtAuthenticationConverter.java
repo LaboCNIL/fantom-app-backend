@@ -1,6 +1,9 @@
 package com.aot.fantomeapp.config.auth.impl;
 
 import com.aot.fantomeapp.config.auth.ConnectedUser;
+
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.core.GrantedAuthority;
@@ -9,10 +12,12 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toSet;
 
 @Component
+@Slf4j
 public class KeycloakJwtAuthenticationConverter implements Converter<Jwt, ConnectedUser> {
 
    @Value("${spring.security.oauth2.client.registration.keycloak.client-id}")
@@ -23,6 +28,7 @@ public class KeycloakJwtAuthenticationConverter implements Converter<Jwt, Connec
    public static final String EMAIL_CLAIM = "email";
    public static final String RESOURCE_ACCESS_CLAIM = "resource_access";
    public static final String ROLE_CLAIM = "roles";
+   public static final String LANGUAGE_CLAIM = "language";
 
    @Override
    public ConnectedUser convert(Jwt jwt) {
@@ -38,7 +44,8 @@ public class KeycloakJwtAuthenticationConverter implements Converter<Jwt, Connec
       user.setName(name);
       user.setEmail(email);
       user.setRoles(authorities);
-
+      user.setLanguages(jwt.getClaimAsStringList(LANGUAGE_CLAIM).stream()
+            .map(x -> x.toUpperCase()).collect(Collectors.toList()));
       return user;
    }
 
@@ -50,6 +57,6 @@ public class KeycloakJwtAuthenticationConverter implements Converter<Jwt, Connec
          @SuppressWarnings("unchecked") var resource = (Map<String, List<String>>) resourceAccess.get(clientID);
          resourceRoles.addAll(resource.getOrDefault(ROLE_CLAIM, List.of()));
       }
-      return resourceRoles.stream().map(r -> new SimpleGrantedAuthority("ROLE_" + r)).collect(toSet());
+      return resourceRoles.stream().map(r -> new SimpleGrantedAuthority(r)).collect(toSet());
    }
 }

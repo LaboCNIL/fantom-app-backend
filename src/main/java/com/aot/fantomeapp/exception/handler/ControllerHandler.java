@@ -70,9 +70,9 @@ public class ControllerHandler extends ResponseEntityExceptionHandler {
    @ExceptionHandler(AccessDeniedException.class)
    public final ResponseEntity<ApiError> handleAuthError(Exception ex) {
       log.error(ex.getMessage(), ex);
-      ApiError apiError = new ApiError(LocalDateTime.now(), ex.getMessage(), ex.toString(), HttpStatus.UNAUTHORIZED,
-         HttpStatus.UNAUTHORIZED.value());
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiError);
+      ApiError apiError = new ApiError(LocalDateTime.now(), ex.getMessage(), ex.toString(), HttpStatus.FORBIDDEN,
+         HttpStatus.FORBIDDEN.value());
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(apiError);
    }
 
 }

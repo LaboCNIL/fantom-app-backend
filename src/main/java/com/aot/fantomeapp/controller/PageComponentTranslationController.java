@@ -17,7 +17,7 @@ public class PageComponentTranslationController {
 
    private final PageComponentTranslationService pageComponentTranslationService;
 
-   @PreAuthorize("hasRole('ADMIN')")
+   @PreAuthorize("hasAnyAuthority('ADMIN', 'TRANSLATOR')")
    @GetMapping("{pageComponentTranslationId}")
    public ResponseEntity<PageComponentTranslationWithImageDto> getPageComponentTranslation(@PathVariable("pageComponentTranslationId") Long pageComponentTranslationId) {
       log.debug("getPageComponentTranslation");
@@ -25,22 +25,22 @@ public class PageComponentTranslationController {
       return ResponseEntity.ok(result);
    }
 
-   @PreAuthorize("hasRole('ADMIN')")
+   @PreAuthorize("hasAnyAuthority('ADMIN', 'TRANSLATOR')")
    @PostMapping("{pageComponentId}")
    public void createPageComponentTranslation(@PathVariable("pageComponentId") Long pageComponentId, @RequestBody PageComponentTranslationCreateUpdateDto dto) {
       log.debug("createPageComponentTranslation");
       pageComponentTranslationService.create(pageComponentId, dto);
    }
 
-   @PreAuthorize("hasRole('ADMIN')")
    @PutMapping("{pageComponentTranslationId}")
+   @PreAuthorize("@securityService.isAuthorizedOnComponentTranslation(#pageComponentTranslationId)")
    public void updatePageComponentTranslation(@PathVariable("pageComponentTranslationId") Long pageComponentTranslationId, @RequestBody PageComponentTranslationCreateUpdateDto dto) {
       log.debug("updatePageComponentTranslation");
       pageComponentTranslationService.update(pageComponentTranslationId, dto);
    }
 
-   @PreAuthorize("hasRole('ADMIN')")
    @DeleteMapping("{pageComponentTranslationId}")
+   @PreAuthorize("@securityService.isAuthorizedOnComponentTranslation(#pageComponentTranslationId)")
    public void deletePageComponentTranslation(@PathVariable("pageComponentTranslationId") Long pageComponentTranslationId) {
       log.debug("deletePageComponentTranslation");
       pageComponentTranslationService.delete(pageComponentTranslationId);

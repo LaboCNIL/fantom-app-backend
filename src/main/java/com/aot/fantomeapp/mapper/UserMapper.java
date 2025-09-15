@@ -15,6 +15,7 @@ public class UserMapper {
          .email(connectedUser.getEmail())
          .name(connectedUser.getName())
          .roles(grantedAuthorityToString(connectedUser.getRoles()))
+         .languages(connectedUser.getLanguages())
          .build();
    }
 
