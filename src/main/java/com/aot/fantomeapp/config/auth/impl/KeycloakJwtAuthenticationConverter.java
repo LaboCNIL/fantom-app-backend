@@ -44,8 +44,11 @@ public class KeycloakJwtAuthenticationConverter implements Converter<Jwt, Connec
       user.setName(name);
       user.setEmail(email);
       user.setRoles(authorities);
-      user.setLanguages(jwt.getClaimAsStringList(LANGUAGE_CLAIM).stream()
-            .map(x -> x.toUpperCase()).collect(Collectors.toList()));
+      if (jwt.getClaimAsStringList(LANGUAGE_CLAIM) != null
+            && !jwt.getClaimAsStringList(LANGUAGE_CLAIM).isEmpty()) {
+         user.setLanguages(jwt.getClaimAsStringList(LANGUAGE_CLAIM).stream()
+               .map(x -> x.toUpperCase()).collect(Collectors.toList()));
+      }
       return user;
    }
 
