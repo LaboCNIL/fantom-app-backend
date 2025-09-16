@@ -25,7 +25,7 @@ public class PageComponentTranslationController {
       return ResponseEntity.ok(result);
    }
 
-   @PreAuthorize("hasAnyAuthority('ADMIN', 'TRANSLATOR')")
+   @PreAuthorize("@securityService.isAuthorizedOnCreateTranslation(#dto)")
    @PostMapping("{pageComponentId}")
    public void createPageComponentTranslation(@PathVariable("pageComponentId") Long pageComponentId, @RequestBody PageComponentTranslationCreateUpdateDto dto) {
       log.debug("createPageComponentTranslation");
@@ -33,14 +33,14 @@ public class PageComponentTranslationController {
    }
 
    @PutMapping("{pageComponentTranslationId}")
-   @PreAuthorize("@securityService.isAuthorizedOnComponentTranslation(#pageComponentTranslationId)")
+   @PreAuthorize("@securityService.isAuthorizedOnUpdateTranslation(#pageComponentTranslationId, #dto)")
    public void updatePageComponentTranslation(@PathVariable("pageComponentTranslationId") Long pageComponentTranslationId, @RequestBody PageComponentTranslationCreateUpdateDto dto) {
       log.debug("updatePageComponentTranslation");
       pageComponentTranslationService.update(pageComponentTranslationId, dto);
    }
 
    @DeleteMapping("{pageComponentTranslationId}")
-   @PreAuthorize("@securityService.isAuthorizedOnComponentTranslation(#pageComponentTranslationId)")
+   @PreAuthorize("@securityService.isAuthorizedOnTranslation(#pageComponentTranslationId)")
    public void deletePageComponentTranslation(@PathVariable("pageComponentTranslationId") Long pageComponentTranslationId) {
       log.debug("deletePageComponentTranslation");
       pageComponentTranslationService.delete(pageComponentTranslationId);
