@@ -1,5 +1,16 @@
 package com.aot.fantomeapp.service;
 
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import org.springframework.data.util.Pair;
+import org.springframework.stereotype.Service;
+
 import com.aot.fantomeapp.dto.PageComponentCreateDto;
 import com.aot.fantomeapp.dto.PageComponentDto;
 import com.aot.fantomeapp.dto.PageComponentUpdateDto;
@@ -14,24 +25,11 @@ import com.aot.fantomeapp.model.enums.ComponentType;
 import com.aot.fantomeapp.model.enums.Device;
 import com.aot.fantomeapp.model.enums.TranslationStatus;
 import com.aot.fantomeapp.repository.PageComponentLightRepository;
+import com.aot.fantomeapp.repository.PageComponentTranslationWithImageRepository;
 import com.aot.fantomeapp.repository.PageComponentWithImageRepository;
 
 import jakarta.transaction.Transactional;
-
-import com.aot.fantomeapp.repository.PageComponentTranslationWithImageRepository;
 import lombok.RequiredArgsConstructor;
-
-import org.springframework.data.util.Pair;
-import org.springframework.stereotype.Service;
-
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

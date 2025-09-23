@@ -1,9 +1,6 @@
 package com.aot.fantomeapp.controller;
 
-import com.aot.fantomeapp.model.Image;
-import com.aot.fantomeapp.service.ImageService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.CacheControl;
@@ -17,8 +14,11 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.Duration;
-import java.util.concurrent.TimeUnit;
+import com.aot.fantomeapp.model.Image;
+import com.aot.fantomeapp.service.ImageService;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/public/images")

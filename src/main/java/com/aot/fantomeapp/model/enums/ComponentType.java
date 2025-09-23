@@ -20,8 +20,21 @@ public enum ComponentType {
    CARD_9,
    CARD_10,
    CARD_11,
+   CARD_12,
+   CARD_13,
+   CARD_14,
+   CARD_15,
+   CARD_16,
+   CARD_17,
+   CARD_18,
+   CARD_19,
+   TEMPLATE_MESSAGE,
    TILE_CALL,
    TILE_MESSAGE,
+   TILE_MAIL,
    ENRICHED_LINK,
-   DIVIDER;
+   DIVIDER,
+   BUTTON_PRIMARY,
+   BUTTON_SECONDARY,
+   BUTTON_TERTIARY;
 }

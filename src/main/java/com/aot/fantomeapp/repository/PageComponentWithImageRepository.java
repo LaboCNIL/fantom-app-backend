@@ -1,17 +1,16 @@
 package com.aot.fantomeapp.repository;
 
-import com.aot.fantomeapp.model.PageComponentWithImage;
-import com.aot.fantomeapp.model.enums.ComponentStatus;
-import com.aot.fantomeapp.model.enums.ComponentType;
-import com.aot.fantomeapp.model.enums.TranslationStatus;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
+import com.aot.fantomeapp.model.PageComponentWithImage;
+import com.aot.fantomeapp.model.enums.ComponentStatus;
+import com.aot.fantomeapp.model.enums.TranslationStatus;
 
 @Repository
 public interface PageComponentWithImageRepository extends JpaRepository<PageComponentWithImage, Long> {
