@@ -36,5 +36,6 @@ public enum ComponentType {
    DIVIDER,
    BUTTON_PRIMARY,
    BUTTON_SECONDARY,
-   BUTTON_TERTIARY;
+   BUTTON_TERTIARY,
+   MODAL_FULL;
 }

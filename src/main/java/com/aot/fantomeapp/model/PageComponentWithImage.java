@@ -42,7 +42,6 @@ public class PageComponentWithImage extends BaseEntity {
    @Column(name = "parent_page_component_id", insertable = false, updatable = false)
    private Long parentId;
 
-   //@OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
    @OneToMany(mappedBy = "parent")
    @OrderBy("position ASC")
    private List<PageComponentWithImage> children;
@@ -50,8 +49,16 @@ public class PageComponentWithImage extends BaseEntity {
    @OneToOne(fetch = FetchType.LAZY)
    @JoinColumn(name = "next_page_component_id")
    private PageComponentWithImage next;
+
    @Column(name = "next_page_component_id", insertable = false, updatable = false)
    private Long nextId;
+
+   @OneToOne(fetch = FetchType.LAZY)
+   @JoinColumn(name = "modal_page_component_id")
+   private PageComponentWithImage modal;
+
+   @Column(name = "modal_page_component_id", insertable = false, updatable = false)
+   private Long modalId;
    
    @OneToMany(mappedBy = "pageComponent", fetch = FetchType.LAZY)
    private List<PageComponentTranslationWithImage> translations;

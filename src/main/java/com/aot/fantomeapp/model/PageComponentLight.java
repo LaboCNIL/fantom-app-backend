@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @Immutable
 public class PageComponentLight {
-   
+
    @Id
    protected Long id;
 
@@ -34,7 +34,7 @@ public class PageComponentLight {
 
    @Column
    private Integer position;
-   
+
    @OneToOne(fetch = FetchType.LAZY)
    @JoinColumn(name = "section_id")
    private Section section;
@@ -45,11 +45,15 @@ public class PageComponentLight {
 
    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
    private List<PageComponentLight> children;
-   
+
    @OneToOne(fetch = FetchType.LAZY)
    @JoinColumn(name = "next_page_component_id")
    private PageComponentLight next;
-   
+
+   @OneToOne(fetch = FetchType.LAZY)
+   @JoinColumn(name = "modal_page_component_id")
+   private PageComponentLight modal;
+
    @OneToMany(mappedBy = "pageComponent", fetch = FetchType.LAZY)
    private List<PageComponentTranslationLight> translations;
 }

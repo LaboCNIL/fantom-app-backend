@@ -6,6 +6,6 @@ import com.aot.fantomeapp.model.enums.ComponentType;
 import java.util.List;
 
 public record PageComponentWithImageDto(Long id, String code, ComponentType type, ComponentStatus status, Integer position,
-                                        Long parentId, Long sectionId, Long nextId, List<PageComponentTranslationWithImageDto> translations,
+                                        Long parentId, Long sectionId, Long nextId, Long modalId, List<PageComponentTranslationWithImageDto> translations,
                                         List<Long> childrenIdList) {
 }

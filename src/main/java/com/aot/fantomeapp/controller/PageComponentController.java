@@ -17,7 +17,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class PageComponentController {
-   
+
    private final PageComponentService pageComponentService;
 
    @PreAuthorize("hasAnyAuthority('ADMIN', 'TRANSLATOR')")
@@ -30,12 +30,13 @@ public class PageComponentController {
 
    @PreAuthorize("hasAnyAuthority('ADMIN', 'TRANSLATOR')")
    @GetMapping("section/{sectionId}")
-   public ResponseEntity<List<PageComponentDto>> getPageComponentsBySectionId(@PathVariable("sectionId") Long sectionId) {
+   public ResponseEntity<List<PageComponentDto>> getPageComponentsBySectionId(
+         @PathVariable("sectionId") Long sectionId) {
       log.debug("getPageComponentsBySectionId");
       List<PageComponentDto> result = pageComponentService.findAllLightBySectionId(sectionId);
       return ResponseEntity.ok(result);
    }
-   
+
    @PreAuthorize("hasAnyAuthority('ADMIN')")
    @PostMapping("{sectionId}")
    public void createPageComponent(@PathVariable("sectionId") Long sectionId, @RequestBody PageComponentCreateDto dto) {
@@ -45,14 +46,24 @@ public class PageComponentController {
 
    @PreAuthorize("hasAnyAuthority('ADMIN')")
    @PutMapping("{currentPageComponentId}/next")
-   public void nextPageComponent(@PathVariable("currentPageComponentId") Long currentPageComponentId, @RequestBody Long nextPageComponentId) {
+   public void nextPageComponent(@PathVariable("currentPageComponentId") Long currentPageComponentId,
+         @RequestBody Long nextPageComponentId) {
       log.debug("nextPageComponent");
       pageComponentService.affectNextPageComponent(currentPageComponentId, nextPageComponentId);
    }
 
    @PreAuthorize("hasAnyAuthority('ADMIN')")
+   @PutMapping("{currentPageComponentId}/modal")
+   public void modalPageComponent(@PathVariable("currentPageComponentId") Long currentPageComponentId,
+         @RequestBody Long modalPageComponentId) {
+      log.debug("modalPageComponent");
+      pageComponentService.affectModalPageComponent(currentPageComponentId, modalPageComponentId);
+   }
+
+   @PreAuthorize("hasAnyAuthority('ADMIN')")
    @PutMapping("{pageComponentId}")
-   public void updatePageComponent(@PathVariable("pageComponentId") Long pageComponentId, @RequestBody PageComponentUpdateDto dto) {
+   public void updatePageComponent(@PathVariable("pageComponentId") Long pageComponentId,
+         @RequestBody PageComponentUpdateDto dto) {
       log.debug("updatePageComponent");
       pageComponentService.update(pageComponentId, dto);
    }
@@ -66,7 +77,8 @@ public class PageComponentController {
 
    @PreAuthorize("hasAnyAuthority('ADMIN')")
    @PutMapping("{pageComponentId}/duplicate")
-   public void duplicatePageComponent(@PathVariable("pageComponentId") Long pageComponentId, @RequestBody String newCodeString) {
+   public void duplicatePageComponent(@PathVariable("pageComponentId") Long pageComponentId,
+         @RequestBody String newCodeString) {
       log.debug("duplicatePageComponent");
       pageComponentService.duplicateComponent(pageComponentId, newCodeString);
    }

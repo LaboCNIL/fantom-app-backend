@@ -47,22 +47,24 @@ public class PageComponentService {
 
    public void create(Long sectionId, PageComponentCreateDto dto) {
       PageComponentWithImage pageComponentToSave = new PageComponentWithImage();
-      
+
       Optional<Section> sectionOpt = sectionService.findById(sectionId);
       if (sectionOpt.isEmpty()) {
          throw new RuntimeException("Section not found");
       }
       pageComponentToSave.setSection(sectionOpt.get());
-      
-      if (!(dto.type().equals(ComponentType.PAGE_1) || dto.type().equals(ComponentType.PAGE_2) || dto.type().equals(ComponentType.PAGE_3) 
-         || dto.type().equals(ComponentType.PAGE_4) || dto.type().equals(ComponentType.PAGE_5))) {
+
+      if (!(dto.type().equals(ComponentType.PAGE_1) || dto.type().equals(ComponentType.PAGE_2)
+            || dto.type().equals(ComponentType.PAGE_3)
+            || dto.type().equals(ComponentType.PAGE_4) || dto.type().equals(ComponentType.PAGE_5)
+            || dto.type().equals(ComponentType.MODAL_FULL))) {
          Optional<PageComponentWithImage> parentOpt = pageComponentWithImageRepository.findById(dto.parentId());
          if (parentOpt.isEmpty()) {
             throw new RuntimeException("Parent component not found");
          }
          pageComponentToSave.setParent(parentOpt.get());
       }
-      
+
       pageComponentToSave.setCode(dto.code());
       pageComponentToSave.setType(dto.type());
       pageComponentToSave.setPosition(dto.position());
@@ -74,13 +76,24 @@ public class PageComponentService {
       List<PageComponentLight> pageComponents = pageComponentLightRepository.findAllBySectionId(sectionId);
       pageComponents = pageComponentLightRepository.findAllWithTranslations(pageComponents);
       return pageComponentMapper.toDtoLight(pageComponents);
-      // return pageComponentMapper.toDtoLight(pageComponentLightRepository.findAllBySectionId(sectionId));
+      // return
+      // pageComponentMapper.toDtoLight(pageComponentLightRepository.findAllBySectionId(sectionId));
    }
-   
+
    public void affectNextPageComponent(Long currentPageComponentId, Long nextPageComponentId) {
       pageComponentWithImageRepository.findById(currentPageComponentId).ifPresent(currentPageComponent -> {
          pageComponentWithImageRepository.findById(nextPageComponentId).ifPresent(nextPageComponent -> {
             currentPageComponent.setNext(nextPageComponent);
+            currentPageComponent.setUpdatedAt(Instant.now());
+         });
+         pageComponentWithImageRepository.save(currentPageComponent);
+      });
+   }
+
+   public void affectModalPageComponent(Long currentPageComponentId, Long modalPageComponentId) {
+      pageComponentWithImageRepository.findById(currentPageComponentId).ifPresent(currentPageComponent -> {
+         pageComponentWithImageRepository.findById(modalPageComponentId).ifPresent(modalPageComponent -> {
+            currentPageComponent.setModal(modalPageComponent);
             currentPageComponent.setUpdatedAt(Instant.now());
          });
          pageComponentWithImageRepository.save(currentPageComponent);
@@ -100,22 +113,23 @@ public class PageComponentService {
       if (sectionOpt.isEmpty()) {
          throw new RuntimeException("Section not found");
       }
-      
-      List<PageComponentWithImage> pageComponents = pageComponentWithImageRepository.findAllBySectionIdAndStatus(sectionId, ComponentStatus.PUBLISHED);
+
+      List<PageComponentWithImage> pageComponents = pageComponentWithImageRepository
+            .findAllBySectionIdAndStatus(sectionId, ComponentStatus.PUBLISHED);
 
       // complétio ndes pages components récupérés avec les traductions
       pageComponents = pageComponentWithImageRepository.findAllWithTranslations(
-         pageComponents, TranslationStatus.PUBLISHED, Device.getMainDevice(devices));
+            pageComponents, TranslationStatus.PUBLISHED, Device.getMainDevice(devices));
       return pageComponents.stream()
-         .map(pageComponentWithImage -> 
-            pageComponentMapper.toDtoWithImage(pageComponentWithImage))
-         .collect(Collectors.toMap(PageComponentWithImageDto::id, Function.identity()));
+            .map(pageComponentWithImage -> pageComponentMapper.toDtoWithImage(pageComponentWithImage))
+            .collect(Collectors.toMap(PageComponentWithImageDto::id, Function.identity()));
    }
 
    public void delete(Long pageComponentId) {
-      pageComponentWithImageRepository.findById(pageComponentId).ifPresentOrElse(pageComponentWithImageRepository::delete, ()-> {
-         throw new RuntimeException("Page component not found");
-      });
+      pageComponentWithImageRepository.findById(pageComponentId)
+            .ifPresentOrElse(pageComponentWithImageRepository::delete, () -> {
+               throw new RuntimeException("Page component not found");
+            });
    }
 
    public void update(Long pageComponentId, PageComponentUpdateDto dto) {
@@ -124,15 +138,16 @@ public class PageComponentService {
          throw new RuntimeException("Page component not found");
       }
       PageComponentWithImage pageComponent = optional.get();
-      
+
       Optional<Section> sectionOpt = sectionService.findById(dto.sectionId());
       if (sectionOpt.isEmpty()) {
          throw new RuntimeException("Section not found");
       }
       pageComponent.setSection(sectionOpt.get());
-      
-      if (!(dto.type().equals(ComponentType.PAGE_1) || dto.type().equals(ComponentType.PAGE_2) || dto.type().equals(ComponentType.PAGE_3)
-         || dto.type().equals(ComponentType.PAGE_4) || dto.type().equals(ComponentType.PAGE_5))) {
+
+      if (!(dto.type().equals(ComponentType.PAGE_1) || dto.type().equals(ComponentType.PAGE_2)
+            || dto.type().equals(ComponentType.PAGE_3)
+            || dto.type().equals(ComponentType.PAGE_4) || dto.type().equals(ComponentType.PAGE_5))) {
          Optional<PageComponentWithImage> parentOpt = pageComponentWithImageRepository.findById(dto.parentId());
          if (parentOpt.isEmpty()) {
             throw new RuntimeException("Parent component not found");
@@ -150,10 +165,10 @@ public class PageComponentService {
    public Map<String, Long> findHomePageLinkIds() {
       return pageComponentLightRepository.findIdByCodes(
             List.of(CYBERHARCELEMENT_CODE))
-         .stream()
-         .collect(Collectors.toMap(Pair::getFirst, Pair::getSecond));
+            .stream()
+            .collect(Collectors.toMap(Pair::getFirst, Pair::getSecond));
    }
-   
+
    public Optional<PageComponentWithImage> findByIdWithImage(Long pageComponentId) {
       return pageComponentWithImageRepository.findById(pageComponentId);
    }
@@ -170,7 +185,8 @@ public class PageComponentService {
       pageComponentWithImageRepository.save(duplicatedComponent);
    }
 
-   private PageComponentWithImage duplicateComponentEntity(PageComponentWithImage originalComponent, String newCodeString) {
+   private PageComponentWithImage duplicateComponentEntity(PageComponentWithImage originalComponent,
+         String newCodeString) {
       if (newCodeString == null || newCodeString.isEmpty()) {
          throw new RuntimeException("Le nouveau code est obligatoire");
       }
@@ -186,43 +202,63 @@ public class PageComponentService {
       duplicateTranslations(originalComponent, duplicatedComponent);
       if (originalComponent.getChildren() != null && !originalComponent.getChildren().isEmpty()) {
          List<PageComponentWithImage> duplicatedChildren = new ArrayList<>();
-         
+
          for (PageComponentWithImage originalChild : originalComponent.getChildren()) {
             PageComponentWithImage duplicatedChild = duplicateComponentEntity(originalChild, newCodeString);
             duplicatedChild.setCode(newCodeString + "_" + originalChild.getCode());
             duplicatedChild.setParent(duplicatedComponent);
             duplicatedChild = pageComponentWithImageRepository.save(duplicatedChild);
-            
+
             duplicatedChildren.add(duplicatedChild);
          }
-         
+
          duplicatedComponent.setChildren(duplicatedChildren);
       }
       if (originalComponent.getNext() != null) {
          String newCode = newCodeString + "_" + originalComponent.getNext().getCode();
-         // On vérifie si le nouveeau code n'existe pas déjà, auquel cas cela veut dire 
+         // On vérifie si le nouveeau code n'existe pas déjà, auquel cas cela veut dire
          // qu'il a déjà été dupliqué précédemment par un autre composant
          Optional<PageComponentWithImage> existingComponentOpt = pageComponentWithImageRepository
                .findByCode(newCode);
          if (existingComponentOpt.isPresent()) {
             duplicatedComponent.setNext(existingComponentOpt.get());
          } else {
-            PageComponentWithImage duplicatedNext = duplicateComponentEntity(originalComponent.getNext(), newCodeString);
+            PageComponentWithImage duplicatedNext = duplicateComponentEntity(originalComponent.getNext(),
+                  newCodeString);
             duplicatedNext.setCode(newCode);
             duplicatedNext = pageComponentWithImageRepository.save(duplicatedNext);
             duplicatedComponent.setNext(duplicatedNext);
          }
       }
+
+      if (originalComponent.getModal() != null) {
+         String newCode = newCodeString + "_" + originalComponent.getModal().getCode();
+         // On vérifie si le nouveeau code n'existe pas déjà, auquel cas cela veut dire
+         // qu'il a déjà été dupliqué précédemment par un autre composant
+         Optional<PageComponentWithImage> existingComponentOpt = pageComponentWithImageRepository
+               .findByCode(newCode);
+         if (existingComponentOpt.isPresent()) {
+            duplicatedComponent.setModal(existingComponentOpt.get());
+         } else {
+            PageComponentWithImage duplicatedModal = duplicateComponentEntity(originalComponent.getModal(),
+                  newCodeString);
+            duplicatedModal.setCode(newCode);
+            duplicatedModal = pageComponentWithImageRepository.save(duplicatedModal);
+            duplicatedComponent.setModal(duplicatedModal);
+         }
+      }
+
       return duplicatedComponent;
    }
 
    /**
-    * Duplique toutes les traductions du composant original vers le nouveau composant
+    * Duplique toutes les traductions du composant original vers le nouveau
+    * composant
     */
    private void duplicateTranslations(PageComponentWithImage original, PageComponentWithImage duplicate) {
       if (original.getTranslations() != null) {
          List<PageComponentTranslationWithImage> duplicatedTranslations = new ArrayList<>();
-         
+
          for (PageComponentTranslationWithImage originalTranslation : original.getTranslations()) {
             PageComponentTranslationWithImage duplicatedTranslation = new PageComponentTranslationWithImage();
             duplicatedTranslation.setPageComponent(duplicate);
@@ -233,11 +269,11 @@ public class PageComponentService {
             duplicatedTranslation.setCountryRegion(originalTranslation.getCountryRegion());
             duplicatedTranslation.setDevices(originalTranslation.getDevices());
             duplicatedTranslation.setImage(originalTranslation.getImage());
-            
+
             duplicatedTranslation = pageComponentTranslationWithImageRepository.save(duplicatedTranslation);
             duplicatedTranslations.add(duplicatedTranslation);
          }
-         
+
          duplicate.setTranslations(duplicatedTranslations);
       }
    }

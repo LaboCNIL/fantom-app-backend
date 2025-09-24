@@ -20,6 +20,7 @@ public interface PageComponentLightRepository extends JpaRepository<PageComponen
          LEFT JOIN FETCH p.section
          LEFT JOIN FETCH p.parent
          LEFT JOIN FETCH p.next
+         LEFT JOIN FETCH p.modal
          LEFT JOIN FETCH p.children
       WHERE p.section.id = :sectionId
    """)
