@@ -55,9 +55,8 @@ public class PageComponentService {
       pageComponentToSave.setSection(sectionOpt.get());
 
       if (!(dto.type().equals(ComponentType.PAGE_1) || dto.type().equals(ComponentType.PAGE_2)
-            || dto.type().equals(ComponentType.PAGE_3)
-            || dto.type().equals(ComponentType.PAGE_4) || dto.type().equals(ComponentType.PAGE_5)
-            || dto.type().equals(ComponentType.MODAL_FULL))) {
+            || dto.type().equals(ComponentType.PAGE_3) || dto.type().equals(ComponentType.PAGE_4)
+            || dto.type().equals(ComponentType.PAGE_5) || dto.type().equals(ComponentType.MODAL_FULL))) {
          Optional<PageComponentWithImage> parentOpt = pageComponentWithImageRepository.findById(dto.parentId());
          if (parentOpt.isEmpty()) {
             throw new RuntimeException("Parent component not found");
@@ -76,8 +75,6 @@ public class PageComponentService {
       List<PageComponentLight> pageComponents = pageComponentLightRepository.findAllBySectionId(sectionId);
       pageComponents = pageComponentLightRepository.findAllWithTranslations(pageComponents);
       return pageComponentMapper.toDtoLight(pageComponents);
-      // return
-      // pageComponentMapper.toDtoLight(pageComponentLightRepository.findAllBySectionId(sectionId));
    }
 
    public void affectNextPageComponent(Long currentPageComponentId, Long nextPageComponentId) {
@@ -117,7 +114,7 @@ public class PageComponentService {
       List<PageComponentWithImage> pageComponents = pageComponentWithImageRepository
             .findAllBySectionIdAndStatus(sectionId, ComponentStatus.PUBLISHED);
 
-      // complétio ndes pages components récupérés avec les traductions
+      // complétion des pages components récupérés avec les traductions
       pageComponents = pageComponentWithImageRepository.findAllWithTranslations(
             pageComponents, TranslationStatus.PUBLISHED, Device.getMainDevice(devices));
       return pageComponents.stream()
@@ -146,8 +143,8 @@ public class PageComponentService {
       pageComponent.setSection(sectionOpt.get());
 
       if (!(dto.type().equals(ComponentType.PAGE_1) || dto.type().equals(ComponentType.PAGE_2)
-            || dto.type().equals(ComponentType.PAGE_3)
-            || dto.type().equals(ComponentType.PAGE_4) || dto.type().equals(ComponentType.PAGE_5))) {
+            || dto.type().equals(ComponentType.PAGE_3) || dto.type().equals(ComponentType.PAGE_4)
+            || dto.type().equals(ComponentType.PAGE_5) || dto.type().equals(ComponentType.MODAL_FULL))) {
          Optional<PageComponentWithImage> parentOpt = pageComponentWithImageRepository.findById(dto.parentId());
          if (parentOpt.isEmpty()) {
             throw new RuntimeException("Parent component not found");
