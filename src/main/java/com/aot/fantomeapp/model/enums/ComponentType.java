@@ -28,6 +28,7 @@ public enum ComponentType {
    CARD_17,
    CARD_18,
    CARD_19,
+   CARD_20,
    TEMPLATE_MESSAGE,
    TILE_CALL,
    TILE_MESSAGE,
