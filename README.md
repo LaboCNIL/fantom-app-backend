@@ -1,6 +1,6 @@
-# Fantome App API
+# FantomApp API
 
-Ce module contient l'API du projet Fantome App. Il est écrit en Spring et utilise une base de donnée PSQL.
+Ce module contient l'API du projet FantomApp. Il est écrit en Spring et utilise une base de donnée PSQL.
 
 ## Installation pour le développeur
 
