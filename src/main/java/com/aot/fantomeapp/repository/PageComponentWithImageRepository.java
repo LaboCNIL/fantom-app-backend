@@ -33,8 +33,11 @@ public interface PageComponentWithImageRepository extends JpaRepository<PageComp
       FROM PageComponentWithImage p 
          LEFT JOIN FETCH p.translations t
       WHERE p IN :pageComponents
-         AND t.status = :status
-         AND t.devices LIKE CONCAT('%', :device, '%')
+         AND (
+            (t.status = :status AND t.devices LIKE CONCAT('%', :device, '%')) 
+            OR
+            p.type = 'DIVIDER'
+         )
    """)
    List<PageComponentWithImage> findAllWithTranslations(
          @Param("pageComponents") List<PageComponentWithImage> pageComponents,

@@ -27,7 +27,7 @@ public class PageComponentPublicController {
    
    @GetMapping("section/{sectionId}/root")
    public ResponseEntity<Map<Long, PageComponentWithImageDto>> getPageComponentBySectionId(
-         @PathVariable("sectionId") Long sectionId, @RequestHeader("X-Devices") List<Device> devices) {
+         @PathVariable Long sectionId, @RequestHeader("X-Devices") List<Device> devices) {
       log.debug("getRootPageComponentBySectionId");
       log.debug("Devices : {}", devices);
       Map<Long, PageComponentWithImageDto> result = pageComponentService.findAllPublishedBySectionId(sectionId, devices);
